@@ -2095,7 +2095,7 @@ function WalletPage({ profile, onToast, onRefreshProfile }) {
       </div>
       <div className="stats-row">
         <div className="stat-card">
-          <div className="stat-val">₹4,210</div>
+          <div className="stat-val">₹0</div>
           <div className="stat-lbl">Pending Payout</div>
         </div>
         <div className="stat-card">
@@ -2689,7 +2689,7 @@ function Dashboard({ profile, listings, onNavigate }) {
               <div className="stat-lbl">Reserved</div>
             </div>
             <div className="stat-card">
-              <div className="stat-val b">₹4,210</div>
+              <div className="stat-val b">₹0</div>
               <div className="stat-lbl">Pending Payout</div>
             </div>
           </>
@@ -2735,10 +2735,10 @@ function Dashboard({ profile, listings, onNavigate }) {
           }}
         >
           {[
-            ["🥗", "142 kg", "Food saved this month"],
-            ["🤝", "28", "Successful handoffs"],
-            ["🏢", "9", "Partner restaurants"],
-            ["📉", "₹18,400", "Value recovered"],
+            ["🥗", "0 kg", "Food saved this month"],
+            ["🤝", "0", "Successful handoffs"],
+            ["🏢", "0", "Partner restaurants"],
+            ["📉", "₹0", "Value recovered"],
           ].map(([ic, v, l]) => (
             <div
               key={l}
