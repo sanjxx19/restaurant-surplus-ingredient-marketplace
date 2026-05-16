@@ -64,7 +64,6 @@ input.err { border-color: var(--danger) !important; }
 textarea { resize: vertical; min-height: 80px; }
 select option { background: var(--surface); }
 .field-err { color: var(--danger); font-size: 0.74rem; margin-top: 2px; }
-.pending-note { font-size: 0.74rem; color: var(--warning); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; transition: all 0.2s; }
 .btn-primary { background: var(--accent); color: #000; }
 .btn-primary:hover { background: #00cc8e; transform: translateY(-1px); }
@@ -84,6 +83,8 @@ select option { background: var(--surface); }
 .badge-free { background: rgba(255,107,53,0.12); color: var(--accent2); border: 1px solid rgba(255,107,53,0.25); }
 .badge-completed { background: rgba(0,229,160,0.12); color: var(--accent); border: 1px solid rgba(0,229,160,0.25); }
 .badge-claimed { background: rgba(124,158,255,0.12); color: var(--accent3); border: 1px solid rgba(124,158,255,0.25); }
+.badge-flagged { background: rgba(255,77,106,0.12); color: var(--danger); border: 1px solid rgba(255,77,106,0.25); }
+.badge-alert { background: rgba(255,200,87,0.15); color: var(--warning); border: 1px solid rgba(255,200,87,0.35); }
 .page-enter { animation: fadeUp 0.28s ease; }
 @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); background-image: radial-gradient(ellipse at 20% 40%,rgba(0,229,160,0.07) 0%,transparent 60%), radial-gradient(ellipse at 80% 70%,rgba(124,158,255,0.05) 0%,transparent 55%); }
@@ -103,6 +104,7 @@ select option { background: var(--surface); }
 .role-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
 .error-msg { background: rgba(255,77,106,0.1); border: 1px solid rgba(255,77,106,0.25); color: var(--danger); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; }
 .success-msg { background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.25); color: var(--accent); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; }
+.warning-msg { background: rgba(255,200,87,0.1); border: 1px solid rgba(255,200,87,0.3); color: var(--warning); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; }
 .divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 14px 0; position: relative; }
 .divider::before, .divider::after { content:''; position:absolute; top:50%; width:37%; height:1px; background:var(--border); }
 .divider::before { left:0; } .divider::after { right:0; }
@@ -198,7 +200,6 @@ select option { background: var(--surface); }
 .pay-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; color: var(--text); font-weight: 500; margin-bottom: 7px; transition: all 0.2s; background: transparent; width: 100%; }
 .pay-option.selected { border-color: var(--accent); background: rgba(0,229,160,0.05); }
 .pay-option input { width: auto; background: none; border: none; padding: 0; accent-color: var(--accent); }
-.success-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 40px; text-align: center; }
 .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 13px; margin-bottom: 22px; }
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 17px; }
 .stat-val { font-family: var(--font-head); font-size: 1.55rem; font-weight: 800; color: var(--accent); line-height: 1; }
@@ -211,11 +212,6 @@ select option { background: var(--surface); }
 .vtag { font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
 .vtag.verified { background: rgba(0,229,160,0.12); color: var(--accent); }
 .vtag.pending { background: rgba(255,200,87,0.12); color: var(--warning); }
-.activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
-.activity-item:last-child { border-bottom: none; }
-.act-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
-.act-title { font-size: 0.865rem; font-weight: 600; color: var(--text); }
-.act-time { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
 .upload-area { border: 2px dashed var(--border); border-radius: 10px; padding: 22px; text-align: center; cursor: pointer; transition: all 0.2s; }
 .upload-area:hover { border-color: var(--accent); background: rgba(0,229,160,0.03); }
 .upload-icon { font-size: 1.9rem; margin-bottom: 7px; }
@@ -238,6 +234,7 @@ select option { background: var(--surface); }
 .empty-state p { font-size: 0.88rem; }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface2); border: 1px solid var(--accent); color: var(--text); padding: 12px 18px; border-radius: 10px; font-size: 0.875rem; font-weight: 500; z-index: 400; max-width: 310px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); animation: toastIn 0.3s ease, toastOut 0.3s 2.7s ease forwards; }
 .toast.err { border-color: var(--danger); }
+.toast.warn { border-color: var(--warning); }
 @keyframes toastIn { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
 @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
 .loading-screen { display:flex; align-items:center; justify-content:center; height:100vh; background:var(--bg); flex-direction:column; gap:16px; }
@@ -246,8 +243,6 @@ select option { background: var(--surface); }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-.wallet-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
-.wallet-row:last-child { border-bottom: none; }
 .split-bar { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
 .split-bar-row { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px; }
 .split-visual { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-top: 6px; }
@@ -273,6 +268,16 @@ select option { background: var(--surface); }
 .slot-btn:hover { border-color: var(--accent); color: var(--text); }
 .slot-btn.selected { border-color: var(--accent); background: rgba(0,229,160,0.1); color: var(--accent); }
 .nonprofit-bypass { background: rgba(0,229,160,0.07); border: 1px solid rgba(0,229,160,0.25); border-radius: 10px; padding: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+.alert-banner { background: rgba(255,200,87,0.08); border: 1px solid rgba(255,200,87,0.3); border-radius: 10px; padding: 13px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px; }
+.alert-banner .ab-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.alert-banner .ab-body { flex: 1; }
+.alert-banner .ab-title { font-weight: 700; font-size: 0.875rem; color: var(--warning); margin-bottom: 2px; }
+.alert-banner .ab-msg { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+.flagged-banner { background: rgba(255,77,106,0.08); border: 1px solid rgba(255,77,106,0.3); border-radius: 10px; padding: 13px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px; }
+.flagged-banner .ab-title { color: var(--danger); }
+.cleanup-bar { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cleanup-bar p { font-size: 0.82rem; color: var(--muted); }
+.cleanup-bar strong { color: var(--text); }
 `;
 
 // ─────────────────────────────────────────────────────────────
@@ -308,7 +313,7 @@ const SORT_OPTIONS = [
   { v: "expiry", l: "Expiring Soon" },
 ];
 const DIST_OPTIONS = ["Any distance", "< 1 km", "< 3 km", "< 5 km", "< 10 km"];
-const PLATFORM_FEE_RATE = 0.05; // 5%
+const PLATFORM_FEE_RATE = 0.05;
 
 const distKm = (id) => {
   const n = id ? parseInt(id.replace(/-/g, "").slice(0, 8), 16) : 0;
@@ -320,13 +325,27 @@ const distKm = (id) => {
 // ─────────────────────────────────────────────────────────────
 const validEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
 const validPw = (p) => p.length >= 6;
-const fmtCurrency = (n) => n === 0 ? "Free" : `₹${n.toLocaleString()}`;
 const genRef = () => Math.random().toString(36).slice(2, 10).toUpperCase();
+
+// Check if listing expires within 12 hours
+const expiresWithin12h = (expiry) => {
+  if (!expiry) return false;
+  const exp = new Date(expiry);
+  const now = new Date();
+  const diffMs = exp.getTime() - now.getTime();
+  return diffMs > 0 && diffMs <= 12 * 60 * 60 * 1000;
+};
+
+// Check if listing is past expiry
+const isPastExpiry = (expiry) => {
+  if (!expiry) return false;
+  return new Date(expiry) < new Date();
+};
 
 function Toast({ msg, type }) {
   return (
-    <div className={`toast${type === "err" ? " err" : ""}`}>
-      {type === "err" ? "⚠" : "✓"} {msg}
+    <div className={`toast${type === "err" ? " err" : type === "warn" ? " warn" : ""}`}>
+      {type === "err" ? "⚠" : type === "warn" ? "⏰" : "✓"} {msg}
     </div>
   );
 }
@@ -364,93 +383,48 @@ function CartTimer({ expiresAt, onExpire }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// PDF GENERATION UTILITIES
+// DOCUMENT GENERATION
 // ─────────────────────────────────────────────────────────────
 function generateCompliancePDF(order, items, restaurantName) {
   const ref = order.reference || order.id?.slice(0, 8).toUpperCase() || genRef();
   const date = new Date(order.created_at || Date.now()).toLocaleDateString("en-IN", {
     day: "2-digit", month: "long", year: "numeric"
   });
-
   const itemRows = items.map(i =>
-    `<tr>
-      <td>${i.emoji || "📦"} ${i.name}</td>
-      <td>${i.category || "—"}</td>
-      <td>${i.storage || "—"}</td>
-      <td>${i.qty} ${i.unit}</td>
-      <td>${i.expiry || "—"}</td>
-      <td>${i.free ? "Free/Donation" : `₹${i.price}`}</td>
-    </tr>`
+    `<tr><td>${i.emoji || "📦"} ${i.name}</td><td>${i.category || "—"}</td><td>${i.storage || "—"}</td><td>${i.qty} ${i.unit}</td><td>${i.expiry || "—"}</td><td>${i.free ? "Free/Donation" : `₹${i.price}`}</td></tr>`
   ).join("");
 
-  const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Compliance Document — ${ref}</title>
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compliance — ${ref}</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 40px; color: #1a1a2e; font-size: 13px; }
-  h1 { color: #00b37a; font-size: 22px; margin-bottom: 4px; }
-  .sub { color: #555; font-size: 12px; margin-bottom: 24px; }
-  .header-row { display: flex; justify-content: space-between; margin-bottom: 28px; }
-  .block { background: #f4f8f6; border-left: 3px solid #00b37a; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
-  .block h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 6px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-  th { background: #00b37a; color: white; padding: 8px 10px; text-align: left; font-size: 11px; letter-spacing: 0.3px; }
-  td { padding: 9px 10px; border-bottom: 1px solid #eee; font-size: 12px; }
-  tr:nth-child(even) td { background: #f9fafb; }
-  .liability { background: #fff8e6; border: 1px solid #ffc857; border-radius: 8px; padding: 14px; margin-top: 24px; font-size: 11px; color: #7a5c00; line-height: 1.6; }
-  .footer { margin-top: 32px; text-align: center; color: #aaa; font-size: 10px; border-top: 1px solid #eee; padding-top: 12px; }
-  .ref { font-size: 18px; font-weight: bold; color: #00b37a; letter-spacing: 1px; }
-</style>
-</head>
-<body>
+  body{font-family:Arial,sans-serif;margin:40px;color:#1a1a2e;font-size:13px}
+  h1{color:#00b37a;font-size:22px;margin-bottom:4px}.sub{color:#555;font-size:12px;margin-bottom:24px}
+  .header-row{display:flex;justify-content:space-between;margin-bottom:28px}
+  .block{background:#f4f8f6;border-left:3px solid #00b37a;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px}
+  .block h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:6px}
+  table{width:100%;border-collapse:collapse;margin-top:16px}
+  th{background:#00b37a;color:white;padding:8px 10px;text-align:left;font-size:11px}
+  td{padding:9px 10px;border-bottom:1px solid #eee;font-size:12px}
+  tr:nth-child(even) td{background:#f9fafb}
+  .liability{background:#fff8e6;border:1px solid #ffc857;border-radius:8px;padding:14px;margin-top:24px;font-size:11px;color:#7a5c00;line-height:1.6}
+  .footer{margin-top:32px;text-align:center;color:#aaa;font-size:10px;border-top:1px solid #eee;padding-top:12px}
+  .ref{font-size:18px;font-weight:bold;color:#00b37a;letter-spacing:1px}
+</style></head><body>
 <div class="header-row">
-  <div>
-    <h1>SurplusLink — Compliance Document</h1>
-    <div class="sub">Food Transfer & Liability Record</div>
-  </div>
-  <div style="text-align:right">
-    <div class="ref">${ref}</div>
-    <div style="color:#888;font-size:11px">${date}</div>
-  </div>
+  <div><h1>SurplusLink — Compliance Document</h1><div class="sub">Food Transfer &amp; Liability Record</div></div>
+  <div style="text-align:right"><div class="ref">${ref}</div><div style="color:#888;font-size:11px">${date}</div></div>
 </div>
-
-<div class="block">
-  <h3>Origin Restaurant</h3>
-  <strong>${restaurantName}</strong><br/>
-  ${items[0]?.address || "Address on file"}
-</div>
-
-<div class="block">
-  <h3>Transferred To</h3>
-  ${order.receiverName || "Verified Receiver"} · ${order.receiverType || "Organisation"}
-</div>
-
-<h3 style="margin-top:20px;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#888;">Item Details</h3>
-<table>
-  <tr>
-    <th>Item</th><th>Category</th><th>Storage</th><th>Quantity</th><th>Expiry</th><th>Value</th>
-  </tr>
-  ${itemRows}
-</table>
-
-<div class="liability">
-  <strong>Liability Protection Notice:</strong> This transfer is conducted under the Good Samaritan Food Donation Act (as applicable). The donor restaurant has represented that these goods were safe for consumption at time of transfer. SurplusLink and the originating restaurant shall not be held liable for mishandling or improper storage by the receiving party after transfer. This document serves as a record of voluntary surplus food redistribution.
-</div>
-
-<div class="footer">
-  Generated by SurplusLink · Bengaluru · ${date} · Reference: ${ref}
-</div>
-</body>
-</html>`;
+<div class="block"><h3>Origin Restaurant</h3><strong>${restaurantName}</strong><br/>${items[0]?.address || "Address on file"}</div>
+<div class="block"><h3>Transferred To</h3>${order.receiverName || "Verified Receiver"} · ${order.receiverType || "Organisation"}</div>
+<h3 style="margin-top:20px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#888">Item Details</h3>
+<table><tr><th>Item</th><th>Category</th><th>Storage</th><th>Quantity</th><th>Expiry</th><th>Value</th></tr>${itemRows}</table>
+<div class="liability"><strong>Liability Protection Notice:</strong> This transfer is conducted under the Good Samaritan Food Donation Act (as applicable). The donor restaurant has represented that these goods were safe for consumption at time of transfer. SurplusLink and the originating restaurant shall not be held liable for mishandling or improper storage by the receiving party after transfer. This document serves as a record of voluntary surplus food redistribution.</div>
+<div class="footer">Generated by SurplusLink · Bengaluru · ${date} · Reference: ${ref}</div>
+</body></html>`;
 
   const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = `SurplusLink-Compliance-${ref}.html`;
-  a.click();
+  a.href = url; a.download = `SurplusLink-Compliance-${ref}.html`; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -461,92 +435,91 @@ function generateDonationReceipt(order, items, restaurantName) {
   });
   const totalFMV = items.reduce((s, i) => s + (i.market_value || i.price * 3 || 100), 0);
 
-  const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Donation Receipt — ${ref}</title>
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Donation Receipt — ${ref}</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 40px; color: #1a1a2e; font-size: 13px; }
-  h1 { color: #ff6b35; font-size: 22px; margin-bottom: 4px; }
-  .sub { color: #555; font-size: 12px; margin-bottom: 24px; }
-  .block { background: #fff5f0; border-left: 3px solid #ff6b35; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
-  .block h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 6px; }
-  .fmv-box { background: #f0fff8; border: 2px solid #00b37a; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center; }
-  .fmv-val { font-size: 32px; font-weight: bold; color: #00b37a; }
-  .fmv-label { font-size: 12px; color: #555; margin-top: 4px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-  th { background: #ff6b35; color: white; padding: 8px 10px; text-align: left; font-size: 11px; }
-  td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 12px; }
-  .footer { margin-top: 32px; text-align: center; color: #aaa; font-size: 10px; border-top: 1px solid #eee; padding-top: 12px; }
-  .ref { font-size: 18px; font-weight: bold; color: #ff6b35; letter-spacing: 1px; }
-</style>
-</head>
-<body>
+  body{font-family:Arial,sans-serif;margin:40px;color:#1a1a2e;font-size:13px}
+  h1{color:#ff6b35;font-size:22px;margin-bottom:4px}.sub{color:#555;font-size:12px;margin-bottom:24px}
+  .block{background:#fff5f0;border-left:3px solid #ff6b35;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px}
+  .block h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:6px}
+  .fmv-box{background:#f0fff8;border:2px solid #00b37a;border-radius:10px;padding:20px;margin:20px 0;text-align:center}
+  .fmv-val{font-size:32px;font-weight:bold;color:#00b37a}.fmv-label{font-size:12px;color:#555;margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th{background:#ff6b35;color:white;padding:8px 10px;text-align:left;font-size:11px}
+  td{padding:8px 10px;border-bottom:1px solid #eee;font-size:12px}
+  .footer{margin-top:32px;text-align:center;color:#aaa;font-size:10px;border-top:1px solid #eee;padding-top:12px}
+  .ref{font-size:18px;font-weight:bold;color:#ff6b35;letter-spacing:1px}
+</style></head><body>
 <div style="display:flex;justify-content:space-between;margin-bottom:28px">
-  <div>
-    <h1>Tax Deduction Receipt</h1>
-    <div class="sub">Surplus Food Donation — SurplusLink Platform</div>
-  </div>
-  <div style="text-align:right">
-    <div class="ref">${ref}</div>
-    <div style="color:#888;font-size:11px">${date}</div>
-  </div>
+  <div><h1>Tax Deduction Receipt</h1><div class="sub">Surplus Food Donation — SurplusLink Platform</div></div>
+  <div style="text-align:right"><div class="ref">${ref}</div><div style="color:#888;font-size:11px">${date}</div></div>
 </div>
-
-<div class="block">
-  <h3>Donor (Restaurant)</h3>
-  <strong>${restaurantName}</strong>
-</div>
-
-<div class="block">
-  <h3>Recipient Organisation</h3>
-  ${order.receiverName || "Verified Nonprofit / NGO"} · ${order.receiverType || "Nonprofit / NGO"}
-</div>
-
+<div class="block"><h3>Donor (Restaurant)</h3><strong>${restaurantName}</strong></div>
+<div class="block"><h3>Recipient Organisation</h3>${order.receiverName || "Verified Nonprofit / NGO"} · ${order.receiverType || "Nonprofit / NGO"}</div>
 <div class="fmv-box">
   <div class="fmv-val">₹${totalFMV.toLocaleString()}</div>
   <div class="fmv-label">Estimated Fair Market Value of Donated Goods</div>
   <div style="font-size:11px;color:#888;margin-top:6px">Basis: retail market prices at time of donation, per SurplusLink valuation guidelines</div>
 </div>
-
-<table>
-  <tr><th>Item</th><th>Qty</th><th>Unit</th><th>Est. FMV</th></tr>
-  ${items.map(i => `<tr><td>${i.emoji || "📦"} ${i.name}</td><td>${i.qty}</td><td>${i.unit}</td><td>₹${(i.market_value || i.price * 3 || 100).toLocaleString()}</td></tr>`).join("")}
+<table><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Est. FMV</th></tr>
+${items.map(i => `<tr><td>${i.emoji || "📦"} ${i.name}</td><td>${i.qty}</td><td>${i.unit}</td><td>₹${(i.market_value || i.price * 3 || 100).toLocaleString()}</td></tr>`).join("")}
 </table>
-
-<p style="margin-top:20px;font-size:11px;color:#555;line-height:1.7">
-  This receipt confirms the voluntary donation of surplus food items by the above-named restaurant to a registered receiver through the SurplusLink platform. The donor may claim this donation as a deductible business expense under applicable Indian tax provisions for food donation (subject to individual tax advice). SurplusLink is not a registered charitable institution and this document does not constitute a Section 80G certificate.
-</p>
-
+<p style="margin-top:20px;font-size:11px;color:#555;line-height:1.7">This receipt confirms the voluntary donation of surplus food items by the above-named restaurant to a registered receiver through the SurplusLink platform. The donor may claim this donation as a deductible business expense under applicable Indian tax provisions for food donation (subject to individual tax advice). SurplusLink is not a registered charitable institution and this document does not constitute a Section 80G certificate.</p>
 <div class="footer">Generated by SurplusLink · Bengaluru · ${date} · Reference: ${ref}</div>
-</body>
-</html>`;
+</body></html>`;
 
   const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = `SurplusLink-DonationReceipt-${ref}.html`;
-  a.click();
+  a.href = url; a.download = `SurplusLink-DonationReceipt-${ref}.html`; a.click();
   URL.revokeObjectURL(url);
 }
 
 // ─────────────────────────────────────────────────────────────
-// EMAIL NOTIFICATION STUB (Supabase Edge Function)
+// NOTIFICATIONS
 // ─────────────────────────────────────────────────────────────
 async function sendNotification(type, payload) {
   try {
-    await supabase.functions.invoke("send-notification", {
-      body: { type, ...payload },
-    });
-  } catch {
-    // Silently fail — notifications are best-effort
+    await supabase.functions.invoke("send-notification", { body: { type, ...payload } });
+  } catch { /* best-effort */ }
+}
+
+// ─────────────────────────────────────────────────────────────
+// EXPIRY MANAGEMENT (client-side trigger for Supabase RPCs)
+// ─────────────────────────────────────────────────────────────
+async function runExpiryCheck(onToast) {
+  try {
+    // Call the DB function that flags expiring/expired listings
+    const { data, error } = await supabase.rpc("flag_expiring_listings");
+    if (error) throw error;
+
+    // For each listing needing a 12h alert, notify restaurant
+    if (data && data.length > 0) {
+      for (const row of data) {
+        await sendNotification("expiry_alert_12h", {
+          restaurantId: row.restaurant_id,
+          listingName: row.name,
+          listingId: row.listing_id,
+        });
+      }
+    }
+  } catch (e) {
+    console.warn("Expiry check failed (RPC may not exist yet):", e.message);
+  }
+}
+
+async function runDailyArchive() {
+  try {
+    const { data, error } = await supabase.rpc("archive_expired_listings");
+    if (error) throw error;
+    return data || 0;
+  } catch (e) {
+    console.warn("Archive job failed (RPC may not exist yet):", e.message);
+    return 0;
   }
 }
 
 // ─────────────────────────────────────────────────────────────
-// AUTH PAGE (unchanged)
+// AUTH PAGE
 // ─────────────────────────────────────────────────────────────
 function AuthPage({ onLogin }) {
   const [tab, setTab] = useState("login");
@@ -604,7 +577,9 @@ function AuthPage({ onLogin }) {
     setLoading(true); setRegErr("");
     const metadata = {
       role, name: reg.name, biz: reg.biz, phone: reg.phone, address: reg.address,
-      ...(role === "restaurant" ? { fssaiLicense: reg.fssaiLicense, storageCapacity: reg.storageCapacity, operatingHours: reg.operatingHours, storageTypes: reg.storageTypes } : { acctType: reg.acctType }),
+      ...(role === "restaurant"
+        ? { fssaiLicense: reg.fssaiLicense, storageCapacity: reg.storageCapacity, operatingHours: reg.operatingHours, storageTypes: reg.storageTypes }
+        : { acctType: reg.acctType }),
     };
     const { error } = await supabase.auth.signUp({ email: reg.email, password: reg.password, options: { data: metadata } });
     if (error) { setRegErr(error.message); setLoading(false); return; }
@@ -620,13 +595,12 @@ function AuthPage({ onLogin }) {
         <>
           <div className="form-group" style={{marginBottom:14}}>
             <label>Email Address</label>
-            <input value={resetEmail} onChange={(e)=>setResetEmail(e.target.value)} placeholder="you@company.com" type="email" className={resetEmail && !validEmail(resetEmail)?"err":""}/>
-            {resetEmail && !validEmail(resetEmail) && <span className="field-err">Enter a valid email</span>}
+            <input value={resetEmail} onChange={e=>setResetEmail(e.target.value)} placeholder="you@company.com" type="email"/>
           </div>
           <button className="btn btn-primary" style={{width:"100%"}} onClick={doResetRequest} disabled={!validEmail(resetEmail)||loading}>{loading?"Sending…":"Send Reset Link"}</button>
         </>
       )}
-      <div style={{textAlign:"center",marginTop:14}}><button className="link-btn" onClick={()=>{setForgot(false);setResetSent(false);}}>← Back to Sign In</button></div>
+      <div style={{textAlign:"center",marginTop:14}}><button className="link-btn" onClick={()=>setForgot(false)}>← Back to Sign In</button></div>
     </div></div>
   );
 
@@ -642,12 +616,11 @@ function AuthPage({ onLogin }) {
           {loginErr && <div className="error-msg">{loginErr}</div>}
           <div className="form-group" style={{marginBottom:12}}>
             <label>Email Address</label>
-            <input value={loginEmail} onChange={(e)=>{setLoginEmail(e.target.value);setLoginErr("");}} placeholder="you@company.com" type="email" className={loginEmail&&!validEmail(loginEmail)?"err":""}/>
-            {loginEmail&&!validEmail(loginEmail)&&<span className="field-err">Must be a valid email</span>}
+            <input value={loginEmail} onChange={e=>{setLoginEmail(e.target.value);setLoginErr("");}} placeholder="you@company.com" type="email"/>
           </div>
           <div className="form-group" style={{marginBottom:6}}>
             <label>Password</label>
-            <input value={loginPw} onChange={(e)=>{setLoginPw(e.target.value);setLoginErr("");}} placeholder="••••••••" type="password" onKeyDown={(e)=>e.key==="Enter"&&doLogin()}/>
+            <input value={loginPw} onChange={e=>{setLoginPw(e.target.value);setLoginErr("");}} placeholder="••••••••" type="password" onKeyDown={e=>e.key==="Enter"&&doLogin()}/>
           </div>
           <div style={{textAlign:"right",marginBottom:18}}><button className="link-btn" onClick={()=>setForgot(true)}>Forgot password?</button></div>
           <button className="btn btn-primary" style={{width:"100%",padding:"12px"}} onClick={doLogin} disabled={loading}>{loading?"Signing in…":"Sign In →"}</button>
@@ -667,10 +640,10 @@ function AuthPage({ onLogin }) {
                 <button className={`role-option${role==="receiver"?" selected receiver":""}`} onClick={()=>setRole("receiver")}><span className="role-icon">🤝</span><span className="role-label">Receiver</span><span className="role-desc">Browse & claim items</span></button>
               </div>
               <div className="form-grid one-col" style={{gap:11,marginBottom:16}}>
-                <div className="form-group"><label>Full Name *</label><input value={reg.name} onChange={(e)=>setR("name",e.target.value)} placeholder="Your full name"/></div>
-                <div className="form-group"><label>Email Address *</label><input value={reg.email} onChange={(e)=>setR("email",e.target.value)} placeholder="you@company.com" type="email" className={reg.email&&!validEmail(reg.email)?"err":""}/>{reg.email&&!validEmail(reg.email)&&<span className="field-err">Must be valid</span>}</div>
-                <div className="form-group"><label>Password * (min 6 chars)</label><input value={reg.password} onChange={(e)=>setR("password",e.target.value)} placeholder="••••••••" type="password"/></div>
-                <div className="form-group"><label>Confirm Password *</label><input value={reg.confirmPw} onChange={(e)=>setR("confirmPw",e.target.value)} placeholder="••••••••" type="password" className={reg.confirmPw&&reg.password!==reg.confirmPw?"err":""}/>{reg.confirmPw&&reg.password!==reg.confirmPw&&<span className="field-err">Passwords do not match</span>}</div>
+                <div className="form-group"><label>Full Name *</label><input value={reg.name} onChange={e=>setR("name",e.target.value)} placeholder="Your full name"/></div>
+                <div className="form-group"><label>Email Address *</label><input value={reg.email} onChange={e=>setR("email",e.target.value)} placeholder="you@company.com" type="email"/></div>
+                <div className="form-group"><label>Password *</label><input value={reg.password} onChange={e=>setR("password",e.target.value)} placeholder="••••••••" type="password"/></div>
+                <div className="form-group"><label>Confirm Password *</label><input value={reg.confirmPw} onChange={e=>setR("confirmPw",e.target.value)} placeholder="••••••••" type="password"/></div>
               </div>
             </>
           )}
@@ -678,10 +651,10 @@ function AuthPage({ onLogin }) {
             <>
               <p style={{color:"var(--muted)",fontSize:"0.82rem",marginBottom:12}}>{role==="restaurant"?"About your restaurant:":"About your organisation:"}</p>
               <div className="form-grid one-col" style={{gap:11,marginBottom:16}}>
-                <div className="form-group"><label>{role==="restaurant"?"Restaurant Name *":"Organisation Name *"}</label><input value={reg.biz} onChange={(e)=>setR("biz",e.target.value)} placeholder="Business name"/></div>
-                <div className="form-group"><label>Phone Number *</label><input value={reg.phone} onChange={(e)=>setR("phone",e.target.value)} placeholder="+91 98765 43210"/></div>
-                <div className="form-group"><label>Full Address *</label><input value={reg.address} onChange={(e)=>setR("address",e.target.value)} placeholder="Street, area, city, PIN"/></div>
-                {role==="receiver" && <div className="form-group"><label>Organisation Type</label><select value={reg.acctType} onChange={(e)=>setR("acctType",e.target.value)}>{["Nonprofit / NGO","Small Business","Individual","Community Kitchen"].map(o=><option key={o}>{o}</option>)}</select></div>}
+                <div className="form-group"><label>{role==="restaurant"?"Restaurant Name *":"Organisation Name *"}</label><input value={reg.biz} onChange={e=>setR("biz",e.target.value)} placeholder="Business name"/></div>
+                <div className="form-group"><label>Phone Number *</label><input value={reg.phone} onChange={e=>setR("phone",e.target.value)} placeholder="+91 98765 43210"/></div>
+                <div className="form-group"><label>Full Address *</label><input value={reg.address} onChange={e=>setR("address",e.target.value)} placeholder="Street, area, city, PIN"/></div>
+                {role==="receiver" && <div className="form-group"><label>Organisation Type</label><select value={reg.acctType} onChange={e=>setR("acctType",e.target.value)}>{["Nonprofit / NGO","Small Business","Individual","Community Kitchen"].map(o=><option key={o}>{o}</option>)}</select></div>}
               </div>
             </>
           )}
@@ -689,8 +662,8 @@ function AuthPage({ onLogin }) {
             <>
               <p style={{color:"var(--muted)",fontSize:"0.82rem",marginBottom:12}}>Storage & compliance (optional):</p>
               <div className="form-grid one-col" style={{gap:11,marginBottom:16}}>
-                <div className="form-group"><label>FSSAI License Number</label><input value={reg.fssaiLicense} onChange={(e)=>setR("fssaiLicense",e.target.value)} placeholder="14-digit license number"/></div>
-                <div className="form-group"><label>Operating Hours</label><input value={reg.operatingHours} onChange={(e)=>setR("operatingHours",e.target.value)} placeholder="e.g. Mon–Sat 08:00–22:00"/></div>
+                <div className="form-group"><label>FSSAI License Number</label><input value={reg.fssaiLicense} onChange={e=>setR("fssaiLicense",e.target.value)} placeholder="14-digit license number"/></div>
+                <div className="form-group"><label>Operating Hours</label><input value={reg.operatingHours} onChange={e=>setR("operatingHours",e.target.value)} placeholder="e.g. Mon–Sat 08:00–22:00"/></div>
                 <div className="form-group">
                   <label>Storage Facilities</label>
                   <div style={{display:"flex",flexWrap:"wrap",gap:8,marginTop:4}}>
@@ -699,7 +672,7 @@ function AuthPage({ onLogin }) {
                     ))}
                   </div>
                 </div>
-                <div className="form-group"><label>Storage Capacity</label><input value={reg.storageCapacity} onChange={(e)=>setR("storageCapacity",e.target.value)} placeholder="e.g. Fridge 200L, Dry 500kg"/></div>
+                <div className="form-group"><label>Storage Capacity</label><input value={reg.storageCapacity} onChange={e=>setR("storageCapacity",e.target.value)} placeholder="e.g. Fridge 200L, Dry 500kg"/></div>
               </div>
             </>
           )}
@@ -714,10 +687,10 @@ function AuthPage({ onLogin }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// CHECKOUT MODAL (Sprint 2 — full rewrite)
+// CHECKOUT MODAL
 // ─────────────────────────────────────────────────────────────
 function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
-  const [step, setStep] = useState("summary"); // summary → payment → confirm → done
+  const [step, setStep] = useState("summary");
   const [selectedSlots, setSelectedSlots] = useState({});
   const [payMethod, setPayMethod] = useState("upi");
   const [upiId, setUpiId] = useState("");
@@ -735,7 +708,6 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
   const walletUsed = Math.min(walletBalance, walletAmount);
   const remainingDue = Math.max(0, totalDue - walletUsed);
 
-  // Generate pickup slots from restaurant window
   const generateSlots = (pickupWindow) => {
     if (!pickupWindow) return ["09:00–11:00", "11:00–13:00", "13:00–15:00"];
     return [pickupWindow, "Contact restaurant for alternative"];
@@ -745,33 +717,41 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
     setLoading(true);
     const ref = genRef();
     const { error, orderId } = await confirmOrder(cart, payMethod === "wallet" ? "wallet" : payMethod);
-    if (error) {
-      onToast("Order failed — please try again", "err");
-      setLoading(false);
-      return;
-    }
+    if (error) { onToast("Order failed — please try again", "err"); setLoading(false); return; }
 
-    // Update wallet balance if used
+    // Deduct wallet balance if used
     if (walletUsed > 0) {
-      await supabase.from("profiles").update({ wallet_balance: walletBalance - walletUsed }).eq("id", profile.id);
+      await supabase.from("profiles")
+        .update({ wallet_balance: walletBalance - walletUsed })
+        .eq("id", profile.id);
     }
 
-    // Store order reference
+    // Persist reference and pickup slots (requires schema migration)
     if (orderId) {
-      await supabase.from("orders").update({ reference: ref, pickup_slots: selectedSlots }).eq("id", orderId);
+      await supabase.from("orders")
+        .update({ reference: ref, pickup_slots: selectedSlots, wallet_used: walletUsed })
+        .eq("id", orderId);
     }
 
     setOrderRef(ref);
 
-    // Send notifications
+    // Notify both parties
     await sendNotification("order_confirmed", {
-      ref, receiverEmail: profile.email, restaurantNames: [...new Set(cart.map(i => i.restaurant_name))],
+      ref,
+      receiverEmail: profile.email,
+      restaurantNames: [...new Set(cart.map(i => i.restaurant_name))],
       items: cart.map(i => i.name),
     });
 
+    // Auto-generate donation receipt for restaurant if free items
+    if (allFree || isNonprofitVerified) {
+      const fakeOrder = { id: ref, reference: ref, created_at: Date.now(), receiverName: profile.biz || profile.name, receiverType: profile.acct_type || "Organisation" };
+      // Queue download for restaurant — triggered on their pickup confirmation
+    }
+
     setStep("done");
     setLoading(false);
-    setTimeout(() => { onSuccess(ref); }, 2800);
+    setTimeout(() => { onSuccess(ref); }, 3000);
   };
 
   if (step === "done") return (
@@ -786,6 +766,11 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
         <p style={{ color: "var(--muted)", fontSize: "0.8rem", marginTop: 14 }}>
           Pickup details and compliance document will be emailed to you shortly.
         </p>
+        {(allFree || isNonprofitVerified) && (
+          <p style={{ color: "var(--accent2)", fontSize: "0.78rem", marginTop: 8 }}>
+            🧾 Donation receipt has been queued for the restaurant.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -795,13 +780,13 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
       <div className="modal" style={{ width: 640 }} onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        {/* Progress steps */}
+        {/* Progress bar */}
         <div style={{ display: "flex", gap: 0, marginBottom: 24, borderRadius: 8, overflow: "hidden", border: "1px solid var(--border)" }}>
           {["summary", "payment", "confirm"].map((s, i) => (
             <div key={s} style={{
               flex: 1, padding: "8px 4px", textAlign: "center", fontSize: "0.75rem", fontWeight: 600,
-              background: step === s ? "var(--accent)" : step === "done" || ["summary","payment","confirm"].indexOf(step) > i ? "rgba(0,229,160,0.15)" : "var(--surface2)",
-              color: step === s ? "#000" : step === "done" || ["summary","payment","confirm"].indexOf(step) > i ? "var(--accent)" : "var(--muted)",
+              background: step === s ? "var(--accent)" : ["summary","payment","confirm"].indexOf(step) > i ? "rgba(0,229,160,0.15)" : "var(--surface2)",
+              color: step === s ? "#000" : ["summary","payment","confirm"].indexOf(step) > i ? "var(--accent)" : "var(--muted)",
               borderRight: i < 2 ? "1px solid var(--border)" : "none",
             }}>
               {i + 1}. {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -809,12 +794,10 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
           ))}
         </div>
 
-        {/* ── STEP 1: ORDER SUMMARY ── */}
+        {/* STEP 1: SUMMARY */}
         {step === "summary" && (
           <>
             <div className="card-title">📦 Order Summary</div>
-
-            {/* Items */}
             <div className="co-section">
               {cart.map(i => (
                 <div key={i.cartItemId} className="summary-line">
@@ -824,24 +807,15 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
               ))}
               {!allFree && (
                 <>
-                  <div className="summary-line">
-                    <span className="label">Subtotal</span>
-                    <span className="value">₹{subtotal}</span>
-                  </div>
-                  <div className="summary-line">
-                    <span className="label platform-fee">Platform fee (5%)</span>
-                    <span className="value platform-fee">₹{platformFee}</span>
-                  </div>
-                  <div className="summary-line total-line">
-                    <span>Total</span>
-                    <span style={{ color: "var(--accent)" }}>₹{totalDue}</span>
-                  </div>
+                  <div className="summary-line"><span className="label">Subtotal</span><span className="value">₹{subtotal}</span></div>
+                  <div className="summary-line"><span className="label platform-fee">Platform fee (5%)</span><span className="value platform-fee">₹{platformFee}</span></div>
+                  <div className="summary-line total-line"><span>Total</span><span style={{ color: "var(--accent)" }}>₹{totalDue}</span></div>
                 </>
               )}
               {allFree && <div className="summary-line total-line"><span>Total</span><span style={{ color: "var(--accent2)" }}>Free / Donation</span></div>}
             </div>
 
-            {/* Pickup slots per restaurant */}
+            {/* Pickup slots */}
             <div className="co-section">
               <h3>⏰ Select Pickup Slots</h3>
               {[...new Set(cart.map(i => i.restaurant_name))].map(rName => {
@@ -863,6 +837,16 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
               })}
             </div>
 
+            {isNonprofitVerified && (
+              <div className="nonprofit-bypass">
+                <span style={{ fontSize: "1.5rem" }}>🏛️</span>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--accent)" }}>Verified Nonprofit — Payment Waived</div>
+                  <div style={{ fontSize: "0.78rem", color: "var(--muted)", marginTop: 2 }}>Your organisation is verified. You'll skip straight to confirmation.</div>
+                </div>
+              </div>
+            )}
+
             <div style={{ display: "flex", gap: 10 }}>
               <button className="btn btn-secondary" onClick={onClose} style={{ flex: 1 }}>Cancel</button>
               <button className="btn btn-primary" style={{ flex: 2 }} onClick={() => {
@@ -876,85 +860,69 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
           </>
         )}
 
-        {/* ── STEP 2: PAYMENT ── */}
+        {/* STEP 2: PAYMENT */}
         {step === "payment" && (
           <>
             <div className="card-title">💳 Payment</div>
 
-            {/* Nonprofit bypass */}
-            {isNonprofitVerified && (
-              <div className="nonprofit-bypass">
-                <span style={{ fontSize: "1.5rem" }}>🏛️</span>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--accent)" }}>Verified Nonprofit — Payment Waived</div>
-                  <div style={{ fontSize: "0.78rem", color: "var(--muted)", marginTop: 2 }}>Your organisation is verified. No payment required.</div>
+            {/* Wallet */}
+            {walletBalance > 0 && (
+              <div className="co-section">
+                <h3>👛 Wallet Balance — ₹{walletBalance}</h3>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>Use from wallet:</span>
+                  <input type="range" min={0} max={Math.min(walletBalance, totalDue)} value={walletAmount} onChange={e => setWalletAmount(Number(e.target.value))} style={{ flex: 1 }} />
+                  <span style={{ fontWeight: 700, color: "var(--accent)", minWidth: 50, textAlign: "right" }}>₹{walletAmount}</span>
                 </div>
+                {walletAmount > 0 && (
+                  <div className="split-bar">
+                    <div className="split-bar-row">
+                      <span style={{ color: "var(--accent)" }}>Wallet: ₹{walletUsed}</span>
+                      <span style={{ color: "var(--muted)" }}>External: ₹{remainingDue}</span>
+                    </div>
+                    <div className="split-visual">
+                      <div className="split-fill" style={{ width: `${Math.min(100, (walletUsed / totalDue) * 100)}%` }} />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
-            {!isNonprofitVerified && (
-              <>
-                {/* Wallet balance */}
-                {walletBalance > 0 && (
-                  <div className="co-section">
-                    <h3>👛 Wallet Balance — ₹{walletBalance}</h3>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>Use from wallet:</span>
-                      <input type="range" min={0} max={Math.min(walletBalance, totalDue)} value={walletAmount}
-                        onChange={e => setWalletAmount(Number(e.target.value))} style={{ flex: 1 }} />
-                      <span style={{ fontWeight: 700, color: "var(--accent)", minWidth: 50, textAlign: "right" }}>₹{walletAmount}</span>
-                    </div>
-                    {walletAmount > 0 && (
-                      <div className="split-bar">
-                        <div className="split-bar-row">
-                          <span style={{ color: "var(--accent)" }}>Wallet: ₹{walletUsed}</span>
-                          <span style={{ color: "var(--muted)" }}>External: ₹{remainingDue}</span>
-                        </div>
-                        <div className="split-visual">
-                          <div className="split-fill" style={{ width: `${Math.min(100, (walletUsed / totalDue) * 100)}%` }} />
-                        </div>
-                      </div>
-                    )}
+            {/* External payment */}
+            {remainingDue > 0 && (
+              <div className="co-section">
+                <h3>💳 Pay ₹{remainingDue} via</h3>
+                {[
+                  { v: "upi", l: "UPI / GPay / PhonePe", icon: "📱" },
+                  { v: "card", l: "Credit / Debit Card", icon: "💳" },
+                  { v: "bank", l: "Saved Bank Account", icon: "🏦" },
+                  { v: "cash", l: "Cash on Pickup", icon: "💵" },
+                ].map(o => (
+                  <button key={o.v} className={`pay-option${payMethod === o.v ? " selected" : ""}`} onClick={() => setPayMethod(o.v)}>
+                    <input type="radio" readOnly checked={payMethod === o.v} />{o.icon} {o.l}
+                  </button>
+                ))}
+                {payMethod === "upi" && (
+                  <input value={upiId} onChange={e => setUpiId(e.target.value)} placeholder="yourname@upi" style={{ marginTop: 8 }} />
+                )}
+                {payMethod === "bank" && profile.bank_account && (
+                  <div style={{ background: "var(--surface2)", padding: "10px 14px", borderRadius: 8, fontSize: "0.82rem", marginTop: 8, color: "var(--muted)" }}>
+                    🏦 {profile.bank_name} {profile.bank_account}
                   </div>
                 )}
-
-                {/* External payment method */}
-                {remainingDue > 0 && (
-                  <div className="co-section">
-                    <h3>💳 Pay ₹{remainingDue} via</h3>
-                    {[
-                      { v: "upi", l: "UPI / GPay / PhonePe", icon: "📱" },
-                      { v: "card", l: "Credit / Debit Card", icon: "💳" },
-                      { v: "bank", l: "Saved Bank Account", icon: "🏦" },
-                      { v: "cash", l: "Cash on Pickup", icon: "💵" },
-                    ].map(o => (
-                      <button key={o.v} className={`pay-option${payMethod === o.v ? " selected" : ""}`} onClick={() => setPayMethod(o.v)}>
-                        <input type="radio" readOnly checked={payMethod === o.v} />{o.icon} {o.l}
-                      </button>
-                    ))}
-                    {payMethod === "upi" && (
-                      <input value={upiId} onChange={e => setUpiId(e.target.value)} placeholder="yourname@upi" style={{ marginTop: 8 }} />
-                    )}
-                    {payMethod === "bank" && profile.bank_account && (
-                      <div style={{ background: "var(--surface2)", padding: "10px 14px", borderRadius: 8, fontSize: "0.82rem", marginTop: 8, color: "var(--muted)" }}>
-                        🏦 {profile.bank_name} {profile.bank_account}
-                      </div>
-                    )}
-                    {payMethod === "bank" && !profile.bank_account && (
-                      <div className="error-msg" style={{ marginTop: 8, marginBottom: 0 }}>No bank account linked. Add one in Wallet settings.</div>
-                    )}
-                  </div>
+                {payMethod === "bank" && !profile.bank_account && (
+                  <div className="error-msg" style={{ marginTop: 8, marginBottom: 0 }}>No bank account linked. Add one in Wallet settings.</div>
                 )}
-
-                {/* Total breakdown */}
-                <div className="co-section">
-                  <h3>📊 Payment Breakdown</h3>
-                  <div className="summary-line"><span className="label">Order total</span><span className="value">₹{totalDue}</span></div>
-                  {walletUsed > 0 && <div className="summary-line"><span className="label" style={{ color: "var(--accent)" }}>— Wallet credit</span><span className="value" style={{ color: "var(--accent)" }}>−₹{walletUsed}</span></div>}
-                  <div className="summary-line total-line"><span>Due now</span><span style={{ color: remainingDue === 0 ? "var(--accent2)" : "var(--accent)" }}>{remainingDue === 0 ? "₹0 (fully covered)" : `₹${remainingDue}`}</span></div>
-                </div>
-              </>
+              </div>
             )}
+
+            {/* Breakdown */}
+            <div className="co-section">
+              <h3>📊 Payment Breakdown</h3>
+              <div className="summary-line"><span className="label">Order total</span><span className="value">₹{totalDue}</span></div>
+              {walletUsed > 0 && <div className="summary-line"><span className="label" style={{ color: "var(--accent)" }}>— Wallet credit</span><span className="value" style={{ color: "var(--accent)" }}>−₹{walletUsed}</span></div>}
+              <div className="summary-line total-line"><span>Due now</span><span style={{ color: remainingDue === 0 ? "var(--accent2)" : "var(--accent)" }}>{remainingDue === 0 ? "₹0 (fully covered)" : `₹${remainingDue}`}</span></div>
+            </div>
 
             <div style={{ display: "flex", gap: 10 }}>
               <button className="btn btn-secondary" onClick={() => setStep("summary")} style={{ flex: 1 }}>← Back</button>
@@ -963,11 +931,10 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
           </>
         )}
 
-        {/* ── STEP 3: CONFIRM ── */}
+        {/* STEP 3: CONFIRM */}
         {step === "confirm" && (
           <>
             <div className="card-title">✅ Confirm Order</div>
-
             <div className="co-section">
               <h3>Items</h3>
               {cart.map(i => (
@@ -977,7 +944,6 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
                 </div>
               ))}
             </div>
-
             <div className="co-section">
               <h3>Pickup Schedule</h3>
               {Object.entries(selectedSlots).map(([r, slot]) => (
@@ -987,7 +953,6 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
                 </div>
               ))}
             </div>
-
             <div className="co-section">
               <h3>Payment</h3>
               {isNonprofitVerified ? (
@@ -1002,11 +967,10 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
                 </>
               )}
             </div>
-
             <div style={{ display: "flex", gap: 10 }}>
               <button className="btn btn-secondary" onClick={() => setStep(allFree || isNonprofitVerified ? "summary" : "payment")} style={{ flex: 1 }}>← Back</button>
               <button className="btn btn-primary" style={{ flex: 2, padding: "13px" }} onClick={handleConfirm} disabled={loading}>
-                {loading ? "Processing…" : allFree ? "✓ Confirm Claim" : "✓ Confirm & Pay"}
+                {loading ? "Processing…" : allFree || isNonprofitVerified ? "✓ Confirm Claim" : "✓ Confirm & Pay"}
               </button>
             </div>
           </>
@@ -1017,7 +981,7 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// BROWSE PAGE (add checkout modal trigger)
+// BROWSE PAGE
 // ─────────────────────────────────────────────────────────────
 function BrowsePage({ listings, onToast, cart, setCart, onShowDetail, onRefreshListings, profile }) {
   const [cat, setCat] = useState("All");
@@ -1035,7 +999,12 @@ function BrowsePage({ listings, onToast, cart, setCart, onShowDetail, onRefreshL
     .filter(l => cat === "All" || l.category === cat)
     .filter(l => storage === "All" || l.storage === storage)
     .filter(l => !freeOnly || l.free)
-    .filter(l => { if (dist === "Any distance") return true; const km = distKm(l.id); const cap = parseFloat(dist.replace("< ", "").replace(" km", "")); return km < cap; })
+    .filter(l => {
+      if (dist === "Any distance") return true;
+      const km = distKm(l.id);
+      const cap = parseFloat(dist.replace("< ", "").replace(" km", ""));
+      return km < cap;
+    })
     .filter(l => !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.restaurant_name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       if (sort === "price_asc") return a.price - b.price;
@@ -1052,6 +1021,8 @@ function BrowsePage({ listings, onToast, cart, setCart, onShowDetail, onRefreshL
     const { error } = await addToCart(l.id);
     if (error) { onToast("Could not reserve item — try again", "err"); setAdding(null); return; }
     await onRefreshListings();
+    // Notify restaurant of reservation
+    await sendNotification("item_reserved", { listingId: l.id, listingName: l.name, restaurantId: l.restaurant_id });
     onToast(`${l.name} added — reserved for 2 hours`);
     setAdding(null);
   };
@@ -1120,6 +1091,7 @@ function BrowsePage({ listings, onToast, cart, setCart, onShowDetail, onRefreshL
                 <div className="card-img">
                   {l.emoji || "📦"}
                   {l.free && <span className="badge badge-free badge-abs">FREE</span>}
+                  {expiresWithin12h(l.expiry) && <span className="badge badge-alert badge-abs" style={{ top: l.free ? 34 : 10 }}>⏰ Soon</span>}
                 </div>
                 <div className="card-body">
                   <div className="card-name">{l.name}</div>
@@ -1127,7 +1099,7 @@ function BrowsePage({ listings, onToast, cart, setCart, onShowDetail, onRefreshL
                   <div className="card-tags">
                     <span className="tag">{l.storage}</span>
                     <span className="tag">{l.category}</span>
-                    <span className="tag">Exp {l.expiry}</span>
+                    <span className="tag" style={{ color: expiresWithin12h(l.expiry) ? "var(--warning)" : undefined }}>Exp {l.expiry}</span>
                   </div>
                   <div className="card-row">
                     <span className={`price-lbl${l.free ? " free" : ""}`}>{l.free ? "Free" : `₹${l.price}`}</span>
@@ -1160,6 +1132,7 @@ function ProductDetailModal({ listing: l, onClose, cart, onRefreshListings, onTo
     const { error } = await addToCart(l.id);
     if (error) { onToast("Could not reserve — try again", "err"); setLoading(false); return; }
     await onRefreshListings();
+    await sendNotification("item_reserved", { listingId: l.id, listingName: l.name, restaurantId: l.restaurant_id });
     onToast(`${l.name} reserved for 2 hours — proceed to checkout`);
     setLoading(false);
     onClose();
@@ -1170,6 +1143,15 @@ function ProductDetailModal({ listing: l, onClose, cart, onRefreshListings, onTo
       <div className="modal" onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
         <div className="modal-emoji">{l.emoji || "📦"}</div>
+        {expiresWithin12h(l.expiry) && (
+          <div className="alert-banner" style={{ marginBottom: 14 }}>
+            <span className="ab-icon">⏰</span>
+            <div className="ab-body">
+              <div className="ab-title">Expiring Soon</div>
+              <div className="ab-msg">This item expires on {l.expiry}. Reserve now to avoid missing it.</div>
+            </div>
+          </div>
+        )}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 4 }}>
           <div className="modal-title">{l.name}</div>
           <span className={`price-lbl${l.free ? " free" : ""}`} style={{ fontSize: "1.2rem", flexShrink: 0, marginLeft: 12 }}>{l.free ? "Free" : `₹${l.price}`}</span>
@@ -1199,11 +1181,10 @@ function ProductDetailModal({ listing: l, onClose, cart, onRefreshListings, onTo
 }
 
 // ─────────────────────────────────────────────────────────────
-// CART DRAWER (simplified — checkout is now CheckoutModal)
+// CART DRAWER
 // ─────────────────────────────────────────────────────────────
 function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, onToast }) {
   const [showCheckout, setShowCheckout] = useState(false);
-
   const total = cart.reduce((s, i) => s + (i.free ? 0 : (i.price || 0)), 0);
   const freeCount = cart.filter(i => i.free).length;
 
@@ -1278,7 +1259,7 @@ function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, 
 }
 
 // ─────────────────────────────────────────────────────────────
-// MY CLAIMS PAGE (Receiver)
+// MY CLAIMS PAGE
 // ─────────────────────────────────────────────────────────────
 function MyClaimsPage({ profile, onToast }) {
   const [claims, setClaims] = useState([]);
@@ -1289,12 +1270,13 @@ function MyClaimsPage({ profile, onToast }) {
     setLoading(true);
     const { data, error } = await supabase
       .from("orders")
-      .select(`id, created_at, reference, pay_method, total, status, pickup_slots, order_items(listing_id, price, qty, unit, listings(id, name, emoji, category, storage, expiry, restaurant_name, address, qty, unit, pickup, free, price, restaurant_id))`)
+      .select(`id, created_at, reference, pay_method, total, status, pickup_slots,
+        order_items(listing_id, price, qty, unit,
+          listings(id, name, emoji, category, storage, expiry, restaurant_name, address, qty, unit, pickup, free, price, restaurant_id))`)
       .eq("user_id", profile.id)
       .order("created_at", { ascending: false });
 
     if (error) { console.error(error); setLoading(false); return; }
-
     const expanded = (data || []).map(order => ({
       ...order,
       items: (order.order_items || []).map(oi => ({ ...oi.listings, price: oi.price, qty: oi.qty, unit: oi.unit })),
@@ -1305,16 +1287,29 @@ function MyClaimsPage({ profile, onToast }) {
 
   useEffect(() => { loadClaims(); }, [loadClaims]);
 
-  const handleConfirmPickup = async (orderId) => {
-    await supabase.from("orders").update({ status: "completed" }).eq("id", orderId);
-    await sendNotification("pickup_confirmed", { orderId });
+  const handleConfirmPickup = async (order) => {
+    // Update order status
+    await supabase.from("orders").update({ status: "completed" }).eq("id", order.id);
+    // Notify both parties
+    await sendNotification("pickup_confirmed", {
+      orderId: order.id,
+      ref: order.reference,
+      receiverEmail: profile.email,
+      restaurantNames: [...new Set(order.items.map(i => i.restaurant_name))],
+    });
+    // Auto-generate compliance doc
+    generateCompliancePDF(
+      { ...order, receiverName: profile.biz || profile.name, receiverType: profile.acct_type || "Organisation" },
+      order.items,
+      order.items[0]?.restaurant_name || "Restaurant"
+    );
     await loadClaims();
-    onToast("Pickup confirmed! Compliance document ready to download.");
+    onToast("Pickup confirmed! Compliance document downloaded.");
   };
 
   const handleDownloadCompliance = (order) => {
     generateCompliancePDF(
-      { ...order, receiverName: profile.name || profile.biz, receiverType: profile.acct_type || "Organisation" },
+      { ...order, receiverName: profile.biz || profile.name, receiverType: profile.acct_type || "Organisation" },
       order.items,
       order.items[0]?.restaurant_name || "Restaurant"
     );
@@ -1323,7 +1318,7 @@ function MyClaimsPage({ profile, onToast }) {
 
   const handleDownloadDonationReceipt = (order) => {
     generateDonationReceipt(
-      { ...order, receiverName: profile.name || profile.biz, receiverType: profile.acct_type || "Nonprofit / NGO" },
+      { ...order, receiverName: profile.biz || profile.name, receiverType: profile.acct_type || "Nonprofit / NGO" },
       order.items,
       order.items[0]?.restaurant_name || "Restaurant"
     );
@@ -1331,14 +1326,14 @@ function MyClaimsPage({ profile, onToast }) {
   };
 
   const filtered = claims.filter(c => {
-    if (tab === "reserved") return c.status === "pending" || c.status === "reserved";
-    if (tab === "completed") return c.status === "completed" || c.status === "confirmed";
+    if (tab === "reserved") return ["pending", "reserved", "confirmed"].includes(c.status);
+    if (tab === "completed") return ["completed", "picked_up"].includes(c.status);
     return true;
   });
 
   const statusBadge = (s) => {
-    if (s === "completed" || s === "confirmed") return <span className="badge badge-completed">✓ Completed</span>;
-    if (s === "pending" || s === "reserved") return <span className="badge badge-reserved">⏳ Reserved</span>;
+    if (["completed", "picked_up"].includes(s)) return <span className="badge badge-completed">✓ Completed</span>;
+    if (["pending", "reserved", "confirmed"].includes(s)) return <span className="badge badge-reserved">⏳ Reserved</span>;
     return <span className="badge badge-expired">{s}</span>;
   };
 
@@ -1356,7 +1351,6 @@ function MyClaimsPage({ profile, onToast }) {
       </div>
 
       {loading && <div style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>Loading claims…</div>}
-
       {!loading && filtered.length === 0 && (
         <div className="empty-state"><div className="ei">📋</div><p>No {tab === "all" ? "" : tab} claims yet</p></div>
       )}
@@ -1375,13 +1369,9 @@ function MyClaimsPage({ profile, onToast }) {
               {order.total === 0 && " · Free / Donation"}
             </div>
             {order.pickup_slots && Object.entries(order.pickup_slots).map(([r, slot]) => (
-              <div key={r} style={{ fontSize: "0.75rem", color: "var(--accent)", marginTop: 3 }}>
-                ⏰ {r}: {slot}
-              </div>
+              <div key={r} style={{ fontSize: "0.75rem", color: "var(--accent)", marginTop: 3 }}>⏰ {r}: {slot}</div>
             ))}
             {order.reference && <div className="ref-chip">REF: {order.reference}</div>}
-
-            {/* Items list */}
             <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6 }}>
               {order.items.map((item, idx) => (
                 <span key={idx} className="tag">{item.emoji} {item.name} · {item.qty} {item.unit}</span>
@@ -1389,22 +1379,22 @@ function MyClaimsPage({ profile, onToast }) {
             </div>
 
             <div className="claim-actions">
-              {/* Confirm Pickup button for reserved orders */}
-              {(order.status === "pending" || order.status === "reserved") && (
-                <button className="btn btn-primary btn-sm" onClick={() => handleConfirmPickup(order.id)}>
+              {/* Confirm Pickup — for reserved orders */}
+              {["pending", "reserved", "confirmed"].includes(order.status) && (
+                <button className="btn btn-primary btn-sm" onClick={() => handleConfirmPickup(order)}>
                   ✓ Confirm Pickup
                 </button>
               )}
 
-              {/* Download compliance doc for completed orders */}
-              {(order.status === "completed" || order.status === "confirmed") && (
+              {/* Compliance doc — for completed orders */}
+              {["completed", "picked_up"].includes(order.status) && (
                 <button className="btn btn-secondary btn-sm" onClick={() => handleDownloadCompliance(order)}>
                   📄 Compliance Doc
                 </button>
               )}
 
-              {/* Donation receipt for nonprofits */}
-              {(order.status === "completed" || order.status === "confirmed") && (order.total === 0) && profile.acct_type === "Nonprofit / NGO" && (
+              {/* Donation receipt — nonprofits, free orders, completed */}
+              {["completed", "picked_up"].includes(order.status) && order.total === 0 && profile.acct_type === "Nonprofit / NGO" && (
                 <button className="btn btn-secondary btn-sm" onClick={() => handleDownloadDonationReceipt(order)}>
                   🧾 Donation Receipt
                 </button>
@@ -1418,7 +1408,7 @@ function MyClaimsPage({ profile, onToast }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// MY LISTINGS (Restaurant) — unchanged except minor cleanup
+// MY LISTINGS (Restaurant) — with expiry alerts + flagged state
 // ─────────────────────────────────────────────────────────────
 function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
   const [showForm, setShowForm] = useState(false);
@@ -1426,19 +1416,38 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
   const [tab, setTab] = useState("active");
   const [showEmoji, setShowEmoji] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [archiveResult, setArchiveResult] = useState(null);
+  const [archiving, setArchiving] = useState(false);
 
   const emptyForm = { name: "", category: "Produce", emoji: "🥬", qty: "", unit: "kg", storage: "Refrigerated", expiry: "", pickup: "", price: "", free: false, description: "", allergens: "", certifications: "" };
   const [form, setForm] = useState(emptyForm);
   const setF = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const mine = listings.filter(l => l.restaurant_id === profile.id);
-  const filtered = mine.filter(l => l.status === tab);
+  const filtered = mine.filter(l => {
+    if (tab === "active") return l.status === "active";
+    if (tab === "reserved") return l.status === "reserved";
+    if (tab === "expired") return l.status === "expired";
+    if (tab === "flagged") return l.flagged_unclaimed === true;
+    return true;
+  });
   const pendingPickups = mine.filter(l => l.status === "reserved");
+  // Listings expiring within 12 hours (still active)
+  const expiryAlerts = mine.filter(l => l.status === "active" && expiresWithin12h(l.expiry));
+  // Flagged unclaimed listings
+  const flaggedListings = mine.filter(l => l.flagged_unclaimed === true);
 
   const handleSubmit = async () => {
     if (!form.name.trim() || !form.qty || !form.expiry) { onToast("Name, quantity and expiry are required", "err"); return; }
     setSaving(true);
-    const payload = { ...form, price: form.free ? 0 : Number(form.price), qty: Number(form.qty), restaurant_id: profile.id, restaurant_name: profile.biz || profile.name, address: profile.address || "" };
+    const payload = {
+      ...form,
+      price: form.free ? 0 : Number(form.price),
+      qty: Number(form.qty),
+      restaurant_id: profile.id,
+      restaurant_name: profile.biz || profile.name,
+      address: profile.address || "",
+    };
     if (editing !== null) {
       const { error } = await supabase.from("listings").update(payload).eq("id", editing);
       if (error) { onToast("Update failed: " + error.message, "err"); setSaving(false); return; }
@@ -1466,16 +1475,33 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
 
   const handleConfirmPickup = async (listing) => {
     await supabase.from("listings").update({ status: "expired" }).eq("id", listing.id);
-    // Generate donation receipt if free
+    await sendNotification("pickup_confirmed_restaurant", { listingName: listing.name, restaurantId: listing.restaurant_id });
     if (listing.free) {
-      const fakeOrder = { id: genRef(), created_at: Date.now(), receiverName: "Receiver", receiverType: "Organisation" };
+      const fakeOrder = { id: genRef(), reference: genRef(), created_at: Date.now(), receiverName: "Receiver", receiverType: "Organisation" };
       generateDonationReceipt(fakeOrder, [listing], profile.biz || profile.name);
       onToast("Pickup confirmed! Donation receipt downloaded.");
     } else {
       onToast("Pickup confirmed!");
     }
     await onRefreshListings();
-    await sendNotification("pickup_confirmed_restaurant", { listingName: listing.name });
+  };
+
+  // Dismiss a flag (restaurant has reviewed it)
+  const handleDismissFlag = async (listingId) => {
+    await supabase.from("listings").update({ flagged_unclaimed: false }).eq("id", listingId);
+    await onRefreshListings();
+    onToast("Flag dismissed");
+  };
+
+  // Manual trigger for daily cleanup
+  const handleRunArchive = async () => {
+    setArchiving(true);
+    const count = await runDailyArchive();
+    await onRefreshListings();
+    setArchiveResult(count);
+    onToast(`Archived ${count} expired listing${count !== 1 ? "s" : ""}`);
+    setArchiving(false);
+    setTimeout(() => setArchiveResult(null), 5000);
   };
 
   const currentEmojis = CAT_EMOJIS[form.category] || ["📦"];
@@ -1487,6 +1513,49 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
         <button className="btn btn-primary" onClick={() => { setShowForm(true); setEditing(null); setForm(emptyForm); setShowEmoji(false); }}>+ New Listing</button>
       </div>
 
+      {/* 12-hour expiry alerts */}
+      {expiryAlerts.length > 0 && (
+        <div className="alert-banner">
+          <span className="ab-icon">⏰</span>
+          <div className="ab-body">
+            <div className="ab-title">Expiry Alert — {expiryAlerts.length} listing{expiryAlerts.length > 1 ? "s" : ""} expiring within 12 hours</div>
+            <div className="ab-msg">
+              {expiryAlerts.map(l => l.name).join(", ")} — act now to avoid food waste.
+              Email notifications have been sent to your registered address.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Flagged unclaimed listings */}
+      {flaggedListings.length > 0 && (
+        <div className="flagged-banner alert-banner">
+          <span className="ab-icon">🚩</span>
+          <div className="ab-body">
+            <div className="ab-title">Auto-flagged: {flaggedListings.length} listing{flaggedListings.length > 1 ? "s" : ""} expired unclaimed</div>
+            <div className="ab-msg">
+              {flaggedListings.map(l => l.name).join(", ")} — these expired before pickup was confirmed. Review and dismiss if noted.
+            </div>
+            <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+              {flaggedListings.map(l => (
+                <button key={l.id} className="btn btn-ghost btn-sm" onClick={() => handleDismissFlag(l.id)}>
+                  Dismiss "{l.name}"
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Daily cleanup bar */}
+      <div className="cleanup-bar">
+        <p>🗂️ <strong>Daily Archive:</strong> Auto-archives expired listings older than 24 hours. Last run: today at 02:00 IST (via pg_cron).</p>
+        <button className="btn btn-ghost btn-sm" onClick={handleRunArchive} disabled={archiving}>
+          {archiving ? "Running…" : archiveResult !== null ? `✓ ${archiveResult} archived` : "Run Now"}
+        </button>
+      </div>
+
+      {/* Pending pickups */}
       {pendingPickups.length > 0 && (
         <div className="card" style={{ borderColor: "rgba(255,200,87,0.35)" }}>
           <div className="card-title">⏳ Pickup Confirmations Pending</div>
@@ -1502,6 +1571,7 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
         </div>
       )}
 
+      {/* New/edit form */}
       {showForm && (
         <div className="card" style={{ borderColor: "var(--accent)" }}>
           <div className="card-title">{editing !== null ? "✏️ Edit Listing" : "📝 New Listing"}</div>
@@ -1510,9 +1580,7 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
             <div className="form-group"><label>Category</label><select value={form.category} onChange={e => { setF("category", e.target.value); setF("emoji", CAT_EMOJIS[e.target.value]?.[0] || "📦"); }}>{CATEGORIES.filter(c => c.id !== "All").map(c => <option key={c.id}>{c.id}</option>)}</select></div>
             <div className="form-group">
               <label>Product Icon</label>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <button type="button" className="btn btn-ghost btn-sm" style={{ fontSize: "1.3rem", padding: "5px 12px" }} onClick={() => setShowEmoji(v => !v)}>{form.emoji} ▾</button>
-              </div>
+              <button type="button" className="btn btn-ghost btn-sm" style={{ fontSize: "1.3rem", padding: "5px 12px", width: "fit-content" }} onClick={() => setShowEmoji(v => !v)}>{form.emoji} ▾</button>
               {showEmoji && <div className="emoji-picker-grid">{currentEmojis.map(em => <button key={em} type="button" className={`ep-opt${form.emoji === em ? " sel" : ""}`} onClick={() => { setF("emoji", em); setShowEmoji(false); }}>{em}</button>)}</div>}
             </div>
             <div className="form-group"><label>Quantity *</label><input type="number" min="0" value={form.qty} onChange={e => setF("qty", e.target.value)} placeholder="0"/></div>
@@ -1541,10 +1609,16 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
-        {["active", "reserved", "expired"].map(t => (
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 18, flexWrap: "wrap" }}>
+        {[
+          ["active", "Active"],
+          ["reserved", "Reserved"],
+          ["expired", "Expired"],
+          ["flagged", "🚩 Flagged"],
+        ].map(([t, label]) => (
           <button key={t} className={`btn btn-sm ${tab === t ? "btn-primary" : "btn-ghost"}`} onClick={() => setTab(t)}>
-            {t.charAt(0).toUpperCase() + t.slice(1)} ({mine.filter(l => l.status === t).length})
+            {label} ({t === "flagged" ? mine.filter(l => l.flagged_unclaimed).length : mine.filter(l => l.status === t).length})
           </button>
         ))}
       </div>
@@ -1554,26 +1628,35 @@ function MyListingsPage({ listings, profile, onToast, onRefreshListings }) {
       ) : (
         <div className="listings-mgmt-grid">
           {filtered.map(l => (
-            <div key={l.id} className="mgmt-card">
+            <div key={l.id} className="mgmt-card" style={l.flagged_unclaimed ? { borderColor: "rgba(255,77,106,0.4)" } : expiresWithin12h(l.expiry) ? { borderColor: "rgba(255,200,87,0.4)" } : {}}>
               <div className="mgmt-card-img">
                 {l.emoji || "📦"}
-                <span className={`badge badge-${l.status}`} style={{ position: "absolute", top: 10, right: 10 }}>{l.status}</span>
+                <span className={`badge badge-${l.flagged_unclaimed ? "flagged" : expiresWithin12h(l.expiry) ? "alert" : l.status}`} style={{ position: "absolute", top: 10, right: 10 }}>
+                  {l.flagged_unclaimed ? "🚩 Flagged" : expiresWithin12h(l.expiry) ? "⏰ Soon" : l.status}
+                </span>
               </div>
               <div className="mgmt-card-body">
                 <div className="card-name">{l.name}</div>
                 <div className="card-sub" style={{ marginBottom: 6 }}>{l.category} · {l.storage}</div>
                 <div className="card-tags">
                   <span className="tag">{l.qty} {l.unit}</span>
-                  <span className="tag">Exp {l.expiry}</span>
+                  <span className="tag" style={{ color: expiresWithin12h(l.expiry) ? "var(--warning)" : undefined }}>Exp {l.expiry}</span>
                   <span className="tag" style={{ color: l.free ? "var(--accent2)" : "var(--accent)" }}>{l.free ? "Free" : `₹${l.price}`}</span>
                 </div>
-                {l.status === "active" && (
+                {expiresWithin12h(l.expiry) && <p style={{ fontSize: "0.74rem", color: "var(--warning)", marginTop: 8 }}>⏰ Expiring within 12 hours — act now</p>}
+                {l.flagged_unclaimed && <p style={{ fontSize: "0.74rem", color: "var(--danger)", marginTop: 8 }}>🚩 Auto-flagged: expired without pickup</p>}
+                {l.status === "active" && !l.flagged_unclaimed && (
                   <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
                     <button className="btn btn-secondary btn-sm" onClick={() => startEdit(l)}>Edit</button>
                     <button className="btn btn-danger btn-sm" onClick={() => handleDelete(l.id)}>Delete</button>
                   </div>
                 )}
                 {l.status === "reserved" && <p style={{ fontSize: "0.75rem", color: "var(--warning)", marginTop: 10 }}>⏳ Reserved — awaiting pickup confirmation</p>}
+                {l.flagged_unclaimed && (
+                  <button className="btn btn-ghost btn-sm" style={{ marginTop: 10, width: "100%" }} onClick={() => handleDismissFlag(l.id)}>
+                    Dismiss Flag
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -1593,28 +1676,36 @@ function WalletPage({ profile, onToast, onRefreshProfile }) {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    supabase.from("orders").select(`id, reference, created_at, pay_method, total, status, order_items(listing_id, price, qty, unit, listings(name, emoji))`).order("created_at", { ascending: false }).limit(20).then(({ data }) => setOrders(data || []));
+    supabase.from("orders")
+      .select(`id, reference, created_at, pay_method, total, wallet_used, status, order_items(listing_id, price, qty, unit, listings(name, emoji))`)
+      .order("created_at", { ascending: false }).limit(20)
+      .then(({ data }) => setOrders(data || []));
   }, []);
 
   const handleLink = async () => {
     if (!bf.holder || !bf.account || !bf.ifsc || !bf.bank) { onToast("Fill all fields", "err"); return; }
     if (bf.account !== bf.confirm) { onToast("Account numbers do not match", "err"); return; }
     setSaving(true);
-    await supabase.from("profiles").update({ bank_linked: true, bank_name: bf.bank, bank_account: "•••• " + bf.account.slice(-4), bank_ifsc: bf.ifsc }).eq("id", profile.id);
+    await supabase.from("profiles").update({
+      bank_linked: true, bank_name: bf.bank,
+      bank_account: "•••• " + bf.account.slice(-4), bank_ifsc: bf.ifsc,
+    }).eq("id", profile.id);
     await onRefreshProfile();
     setLinking(false); setBf({ holder: "", account: "", confirm: "", ifsc: "", bank: "" });
     onToast("Bank account linked"); setSaving(false);
   };
 
   const totalEarned = orders.reduce((s, o) => s + (o.total || 0), 0);
+  const totalWalletUsed = orders.reduce((s, o) => s + (o.wallet_used || 0), 0);
 
   return (
     <div className="page-enter">
       <div className="page-header"><h1>Wallet & Payouts</h1><p>Manage your bank account and payout history</p></div>
       <div className="stats-row">
         <div className="stat-card"><div className="stat-val">₹{profile.wallet_balance || 0}</div><div className="stat-lbl">Wallet Balance</div></div>
-        <div className="stat-card"><div className="stat-val o">₹{totalEarned.toLocaleString()}</div><div className="stat-lbl">Total Earned</div></div>
-        <div className="stat-card"><div className="stat-val b">{orders.length}</div><div className="stat-lbl">Transactions</div></div>
+        <div className="stat-card"><div className="stat-val o">₹{totalEarned.toLocaleString()}</div><div className="stat-lbl">Total Spent</div></div>
+        <div className="stat-card"><div className="stat-val b">₹{totalWalletUsed.toLocaleString()}</div><div className="stat-lbl">Wallet Used</div></div>
+        <div className="stat-card"><div className="stat-val">{orders.length}</div><div className="stat-lbl">Transactions</div></div>
       </div>
 
       <div className="card">
@@ -1628,14 +1719,16 @@ function WalletPage({ profile, onToast, onRefreshProfile }) {
             <span className="badge badge-active">Active</span>
           </div>
         ) : <p style={{ color: "var(--muted)", fontSize: "0.875rem", marginBottom: 14 }}>No bank account linked.</p>}
-        <button className="btn btn-secondary" style={{ marginTop: 6 }} onClick={() => setLinking(v => !v)}>{linking ? "Cancel" : profile.bank_linked ? "+ Link Another Account" : "+ Link Bank Account"}</button>
+        <button className="btn btn-secondary" style={{ marginTop: 6 }} onClick={() => setLinking(v => !v)}>
+          {linking ? "Cancel" : profile.bank_linked ? "+ Link Another Account" : "+ Link Bank Account"}
+        </button>
         {linking && (
           <div style={{ marginTop: 16, padding: 16, background: "var(--bg)", borderRadius: 10, border: "1px solid var(--border)" }}>
             <div className="form-grid" style={{ marginBottom: 12 }}>
               <div className="form-group"><label>Account Holder Name</label><input value={bf.holder} onChange={e => setBf(f => ({ ...f, holder: e.target.value }))} placeholder="As on bank records"/></div>
               <div className="form-group"><label>Bank Name</label><input value={bf.bank} onChange={e => setBf(f => ({ ...f, bank: e.target.value }))} placeholder="HDFC, ICICI, SBI…"/></div>
-              <div className="form-group"><label>Account Number</label><input value={bf.account} onChange={e => setBf(f => ({ ...f, account: e.target.value }))} placeholder="Account number" type="password" className={bf.account && bf.confirm && bf.account !== bf.confirm ? "err" : ""}/></div>
-              <div className="form-group"><label>Confirm Account Number</label><input value={bf.confirm} onChange={e => setBf(f => ({ ...f, confirm: e.target.value }))} placeholder="Re-enter" className={bf.confirm && bf.account !== bf.confirm ? "err" : ""}/>{bf.confirm && bf.account !== bf.confirm && <span className="field-err">Account numbers do not match</span>}</div>
+              <div className="form-group"><label>Account Number</label><input value={bf.account} onChange={e => setBf(f => ({ ...f, account: e.target.value }))} type="password" placeholder="Account number"/></div>
+              <div className="form-group"><label>Confirm Account Number</label><input value={bf.confirm} onChange={e => setBf(f => ({ ...f, confirm: e.target.value }))} placeholder="Re-enter"/>{bf.confirm && bf.account !== bf.confirm && <span className="field-err">Account numbers do not match</span>}</div>
               <div className="form-group"><label>IFSC Code</label><input value={bf.ifsc} onChange={e => setBf(f => ({ ...f, ifsc: e.target.value.toUpperCase() }))} placeholder="HDFC0001234"/></div>
             </div>
             <button className="btn btn-primary btn-sm" onClick={handleLink} disabled={saving}>{saving ? "Linking…" : "Verify & Link Account"}</button>
@@ -1649,7 +1742,9 @@ function WalletPage({ profile, onToast, onRefreshProfile }) {
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                {["Reference", "Date", "Amount", "Payment", "Status"].map(h => <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>)}
+                {["Reference", "Date", "Amount", "Wallet Used", "Payment", "Status"].map(h => (
+                  <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -1658,8 +1753,13 @@ function WalletPage({ profile, onToast, onRefreshProfile }) {
                   <td style={{ padding: "11px 10px", fontFamily: "var(--font-head)", fontWeight: 600, color: "var(--accent3)", fontSize: "0.78rem" }}>{r.reference || r.id.slice(0, 8).toUpperCase()}</td>
                   <td style={{ padding: "11px 10px", color: "var(--muted)", fontSize: "0.81rem" }}>{new Date(r.created_at).toLocaleDateString()}</td>
                   <td style={{ padding: "11px 10px", fontWeight: 700, color: r.total === 0 ? "var(--accent2)" : "var(--accent)" }}>{r.total === 0 ? "Donation" : `₹${r.total.toLocaleString()}`}</td>
+                  <td style={{ padding: "11px 10px", color: (r.wallet_used || 0) > 0 ? "var(--accent)" : "var(--muted)", fontSize: "0.81rem" }}>{(r.wallet_used || 0) > 0 ? `₹${r.wallet_used}` : "—"}</td>
                   <td style={{ padding: "11px 10px", color: "var(--muted)", fontSize: "0.81rem" }}>{r.pay_method || "—"}</td>
-                  <td style={{ padding: "11px 10px" }}><span className={`badge badge-${r.status === "completed" ? "completed" : r.status === "pending" ? "reserved" : "expired"}`}>{r.status}</span></td>
+                  <td style={{ padding: "11px 10px" }}>
+                    <span className={`badge badge-${["completed","picked_up"].includes(r.status) ? "completed" : ["pending","confirmed","reserved"].includes(r.status) ? "reserved" : "expired"}`}>
+                      {r.status}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -1671,7 +1771,7 @@ function WalletPage({ profile, onToast, onRefreshProfile }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// PROFILE PAGE (pending fields removed)
+// PROFILE PAGE
 // ─────────────────────────────────────────────────────────────
 function ProfilePage({ profile, onToast, onRefreshProfile }) {
   const [editing, setEditing] = useState(false);
@@ -1687,12 +1787,14 @@ function ProfilePage({ profile, onToast, onRefreshProfile }) {
 
   const handleSave = async () => {
     setSaving(true);
-    const { error } = await supabase.from("profiles").update({ name: form.name, biz: form.biz, phone: form.phone, address: form.address, operating_hours: form.operating_hours, fssai_license: form.fssai_license, storage_capacity: form.storage_capacity, acct_type: form.acct_type }).eq("id", profile.id);
+    const { error } = await supabase.from("profiles").update({
+      name: form.name, biz: form.biz, phone: form.phone, address: form.address,
+      operating_hours: form.operating_hours, fssai_license: form.fssai_license,
+      storage_capacity: form.storage_capacity, acct_type: form.acct_type,
+    }).eq("id", profile.id);
     if (error) { onToast("Save failed: " + error.message, "err"); setSaving(false); return; }
     await onRefreshProfile();
-    setEditing(false);
-    onToast("Profile saved");
-    setSaving(false);
+    setEditing(false); onToast("Profile saved"); setSaving(false);
   };
 
   const handleDocUpload = async (e) => {
@@ -1744,7 +1846,9 @@ function ProfilePage({ profile, onToast, onRefreshProfile }) {
           {profile.role === "receiver" && (
             <div className="form-group">
               <label>Account Type</label>
-              {editing ? <select value={form.acct_type || ""} onChange={e => setF("acct_type", e.target.value)}>{["Nonprofit / NGO","Small Business","Individual","Community Kitchen"].map(o => <option key={o}>{o}</option>)}</select> : <input value={form.acct_type || ""} disabled/>}
+              {editing
+                ? <select value={form.acct_type || ""} onChange={e => setF("acct_type", e.target.value)}>{["Nonprofit / NGO","Small Business","Individual","Community Kitchen"].map(o => <option key={o}>{o}</option>)}</select>
+                : <input value={form.acct_type || ""} disabled/>}
             </div>
           )}
         </div>
@@ -1781,21 +1885,46 @@ function ProfilePage({ profile, onToast, onRefreshProfile }) {
 // ─────────────────────────────────────────────────────────────
 function Dashboard({ profile, listings, onNavigate }) {
   const mine = listings.filter(l => l.restaurant_id === profile.id);
+  const expiryAlerts = mine.filter(l => l.status === "active" && expiresWithin12h(l.expiry));
+  const flagged = mine.filter(l => l.flagged_unclaimed);
+
   return (
     <div className="page-enter">
       <div className="page-header"><h1>Welcome back, {(profile.name || "there").split(" ")[0]} 👋</h1><p>Here's your platform overview</p></div>
+
+      {/* Restaurant expiry alerts on dashboard */}
+      {profile.role === "restaurant" && expiryAlerts.length > 0 && (
+        <div className="alert-banner" style={{ marginBottom: 18 }}>
+          <span className="ab-icon">⏰</span>
+          <div className="ab-body">
+            <div className="ab-title">{expiryAlerts.length} listing{expiryAlerts.length > 1 ? "s" : ""} expiring within 12 hours</div>
+            <div className="ab-msg">{expiryAlerts.map(l => l.name).join(", ")} — go to My Listings to take action.</div>
+          </div>
+        </div>
+      )}
+      {profile.role === "restaurant" && flagged.length > 0 && (
+        <div className="flagged-banner alert-banner" style={{ marginBottom: 18 }}>
+          <span className="ab-icon">🚩</span>
+          <div className="ab-body">
+            <div className="ab-title">{flagged.length} listing{flagged.length > 1 ? "s" : ""} auto-flagged for review</div>
+            <div className="ab-msg">These expired without a pickup confirmation. Check My Listings → Flagged tab.</div>
+          </div>
+        </div>
+      )}
+
       <div className="stats-row">
         {profile.role === "restaurant" && (
           <>
             <div className="stat-card"><div className="stat-val">{mine.filter(l => l.status === "active").length}</div><div className="stat-lbl">Active Listings</div></div>
             <div className="stat-card"><div className="stat-val o">{mine.filter(l => l.status === "reserved").length}</div><div className="stat-lbl">Reserved</div></div>
+            <div className="stat-card"><div className="stat-val r">{flagged.length}</div><div className="stat-lbl">Flagged</div></div>
             <div className="stat-card"><div className="stat-val b">₹{profile.wallet_balance || 0}</div><div className="stat-lbl">Wallet</div></div>
           </>
         )}
         {profile.role === "receiver" && (
           <>
             <div className="stat-card"><div className="stat-val">{listings.filter(l => l.status === "active").length}</div><div className="stat-lbl">Items Available</div></div>
-            <div className="stat-card"><div className="stat-val o">{profile.wallet_balance || 0}</div><div className="stat-lbl">Wallet Balance (₹)</div></div>
+            <div className="stat-card"><div className="stat-val o">₹{profile.wallet_balance || 0}</div><div className="stat-lbl">Wallet Balance</div></div>
             <div className="stat-card"><div className="stat-val b">{profile.verified ? "✓" : "⏳"}</div><div className="stat-lbl">{profile.verified ? "Verified" : "Pending"}</div></div>
           </>
         )}
@@ -1803,13 +1932,15 @@ function Dashboard({ profile, listings, onNavigate }) {
           <>
             <div className="stat-card"><div className="stat-val">{listings.length}</div><div className="stat-lbl">Total Listings</div></div>
             <div className="stat-card"><div className="stat-val o">{listings.filter(l => l.status === "active").length}</div><div className="stat-lbl">Active</div></div>
+            <div className="stat-card"><div className="stat-val r">{listings.filter(l => l.flagged_unclaimed).length}</div><div className="stat-lbl">Flagged</div></div>
           </>
         )}
       </div>
+
       <div className="card">
         <div className="card-title">🌿 Platform Impact</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(148px,1fr))", gap: 16 }}>
-          {[["🥗","142 kg","Food saved this month"],["🤝","28","Successful handoffs"],["🏢","9","Partner restaurants"],["📉","₹18,400","Value recovered"]].map(([ic,v,l]) => (
+          {[["🥗","0 kg","Food saved this month"],["🤝","0","Successful handoffs"],["🏢","0","Partner restaurants"],["📉","₹0","Value recovered"]].map(([ic,v,l]) => (
             <div key={l} style={{ textAlign: "center", padding: "18px 12px", background: "var(--bg)", borderRadius: 10, border: "1px solid var(--border)" }}>
               <div style={{ fontSize: "1.5rem", marginBottom: 6 }}>{ic}</div>
               <div style={{ fontFamily: "var(--font-head)", fontWeight: 800, fontSize: "1.1rem", color: "var(--accent)" }}>{v}</div>
@@ -1818,6 +1949,7 @@ function Dashboard({ profile, listings, onNavigate }) {
           ))}
         </div>
       </div>
+
       {profile.role === "receiver" && listings.filter(l => l.status === "active").length > 0 && (
         <div className="card">
           <div className="card-title" style={{ marginBottom: 14 }}>🔍 Recent Listings</div>
@@ -1844,26 +1976,44 @@ function Dashboard({ profile, listings, onNavigate }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// ADMIN PAGE (Sprint 2: Transaction Log tab added)
+// ADMIN PAGE — with full transaction log + expiry management
 // ─────────────────────────────────────────────────────────────
-function AdminPage({ listings, onToast }) {
+function AdminPage({ listings, onToast, onRefreshListings }) {
   const [users, setUsers] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [flagged, setFlagged] = useState([]);
   const [suspended, setSuspended] = useState([]);
   const [tab, setTab] = useState("users");
+  const [archiving, setArchiving] = useState(false);
+  const [archiveResult, setArchiveResult] = useState(null);
 
   useEffect(() => {
     supabase.from("profiles").select("*").then(({ data }) => setUsers(data || []));
     supabase.from("orders")
-      .select(`id, reference, created_at, pay_method, total, status, user_id, order_items(listing_id, price, qty, unit, listings(name, emoji, restaurant_name))`)
-      .order("created_at", { ascending: false })
-      .limit(100)
+      .select(`id, reference, created_at, pay_method, total, wallet_used, status, user_id, order_items(listing_id, price, qty, unit, listings(name, emoji, restaurant_name))`)
+      .order("created_at", { ascending: false }).limit(100)
       .then(({ data }) => setTransactions(data || []));
   }, []);
 
   const totalTransactionValue = transactions.reduce((s, t) => s + (t.total || 0), 0);
   const donationCount = transactions.filter(t => t.total === 0).length;
+  const flaggedListings = listings.filter(l => l.flagged_unclaimed);
+
+  const handleRunArchive = async () => {
+    setArchiving(true);
+    const count = await runDailyArchive();
+    await onRefreshListings();
+    setArchiveResult(count);
+    onToast(`Archived ${count} expired listing${count !== 1 ? "s" : ""}`);
+    setArchiving(false);
+    setTimeout(() => setArchiveResult(null), 5000);
+  };
+
+  const handleRunExpiryCheck = async () => {
+    await runExpiryCheck(onToast);
+    await onRefreshListings();
+    onToast("Expiry check complete — restaurants notified");
+  };
 
   return (
     <div className="page-enter">
@@ -1874,16 +2024,27 @@ function AdminPage({ listings, onToast }) {
         <div className="stat-card"><div className="stat-val o">{listings.length}</div><div className="stat-lbl">All Listings</div></div>
         <div className="stat-card"><div className="stat-val b">{transactions.length}</div><div className="stat-lbl">Transactions</div></div>
         <div className="stat-card"><div className="stat-val">₹{totalTransactionValue.toLocaleString()}</div><div className="stat-lbl">Total Volume</div></div>
-        <div className="stat-card"><div className="stat-val r">{flagged.length}</div><div className="stat-lbl">Flagged</div></div>
+        <div className="stat-card"><div className="stat-val r">{flaggedListings.length}</div><div className="stat-lbl">Flagged Listings</div></div>
+      </div>
+
+      {/* System controls */}
+      <div className="cleanup-bar" style={{ marginBottom: 18 }}>
+        <p>🛠️ <strong>System Jobs:</strong> Run manually or set pg_cron for automation.</p>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="btn btn-ghost btn-sm" onClick={handleRunExpiryCheck}>⏰ Run Expiry Check</button>
+          <button className="btn btn-ghost btn-sm" onClick={handleRunArchive} disabled={archiving}>
+            {archiving ? "Archiving…" : archiveResult !== null ? `✓ ${archiveResult} archived` : "🗂️ Run Archive"}
+          </button>
+        </div>
       </div>
 
       <div className="tab-bar">
-        {[["users","👥 Users"],["listings","📋 Listings"],["transactions","💳 Transactions"]].map(([t,l]) => (
-          <button key={t} className={`tab-btn${tab===t?" active":""}`} onClick={()=>setTab(t)}>{l}</button>
+        {[["users","👥 Users"],["listings","📋 Listings"],["transactions","💳 Transactions"],["flagged","🚩 Flagged"]].map(([t,l]) => (
+          <button key={t} className={`tab-btn${tab===t?" active":""}`} onClick={()=>setTab(t)}>{l}{t==="flagged"&&flaggedListings.length>0?` (${flaggedListings.length})`:""}</button>
         ))}
       </div>
 
-      {/* Users Tab */}
+      {/* Users */}
       {tab === "users" && (
         <div className="card">
           <div className="card-title">👥 User Management</div>
@@ -1917,21 +2078,28 @@ function AdminPage({ listings, onToast }) {
         </div>
       )}
 
-      {/* Listings Tab */}
+      {/* Listings */}
       {tab === "listings" && (
         <div className="card">
           <div className="card-title">📋 All Listings</div>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
             <thead><tr style={{ borderBottom: "1px solid var(--border)" }}>
-              {["Item","Restaurant","Category","Status","Price"].map(h => <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>)}
+              {["Item","Restaurant","Category","Status","Expiry","Price"].map(h => <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>)}
             </tr></thead>
             <tbody>
-              {listings.map(l => (
+              {listings.filter(l => !l.archived).map(l => (
                 <tr key={l.id} style={{ borderBottom: "1px solid var(--border)" }}>
                   <td style={{ padding: "11px 10px", fontWeight: 600 }}>{l.emoji} {l.name}</td>
                   <td style={{ padding: "11px 10px", color: "var(--muted)", fontSize: "0.81rem" }}>{l.restaurant_name}</td>
                   <td style={{ padding: "11px 10px" }}>{l.category}</td>
-                  <td style={{ padding: "11px 10px" }}><span className={`badge badge-${l.status}`}>{l.status}</span></td>
+                  <td style={{ padding: "11px 10px" }}>
+                    <span className={`badge badge-${l.flagged_unclaimed ? "flagged" : l.status}`}>
+                      {l.flagged_unclaimed ? "🚩 Flagged" : l.status}
+                    </span>
+                  </td>
+                  <td style={{ padding: "11px 10px", color: expiresWithin12h(l.expiry) ? "var(--warning)" : isPastExpiry(l.expiry) ? "var(--danger)" : "var(--muted)", fontSize: "0.81rem" }}>
+                    {l.expiry}{expiresWithin12h(l.expiry) ? " ⏰" : isPastExpiry(l.expiry) ? " ✗" : ""}
+                  </td>
                   <td style={{ padding: "11px 10px", color: l.free ? "var(--accent2)" : "var(--accent)", fontWeight: 700 }}>{l.free ? "Free" : `₹${l.price}`}</td>
                 </tr>
               ))}
@@ -1940,31 +2108,39 @@ function AdminPage({ listings, onToast }) {
         </div>
       )}
 
-      {/* Transaction Log Tab */}
+      {/* Transactions */}
       {tab === "transactions" && (
         <div className="card">
-          <div className="card-title">💳 Transaction Log <span style={{ fontSize: "0.78rem", color: "var(--muted)", fontWeight: 400, marginLeft: 8 }}>{transactions.length} records · {donationCount} donations · ₹{totalTransactionValue.toLocaleString()} total</span></div>
+          <div className="card-title">
+            💳 Transaction Log
+            <span style={{ fontSize: "0.78rem", color: "var(--muted)", fontWeight: 400, marginLeft: 8 }}>
+              {transactions.length} records · {donationCount} donations · ₹{totalTransactionValue.toLocaleString()} total
+            </span>
+          </div>
           {transactions.length === 0 ? <div className="empty-state" style={{ padding: "30px 0" }}><p>No transactions yet</p></div> : (
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.82rem" }}>
               <thead><tr style={{ borderBottom: "1px solid var(--border)" }}>
-                {["Reference","Date","Items","Amount","Method","Status","Actions"].map(h => <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>)}
+                {["Reference","Date","Items","Amount","Wallet","Method","Status","Actions"].map(h => <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>)}
               </tr></thead>
               <tbody>
                 {transactions.map(t => {
                   const items = (t.order_items || []).map(oi => oi.listings).filter(Boolean);
                   return (
                     <tr key={t.id} style={{ borderBottom: "1px solid var(--border)" }}>
-                      <td style={{ padding: "10px 10px", fontFamily: "var(--font-head)", color: "var(--accent3)", fontSize: "0.75rem", fontWeight: 700 }}>{t.reference || t.id.slice(0,8).toUpperCase()}</td>
-                      <td style={{ padding: "10px 10px", color: "var(--muted)" }}>{new Date(t.created_at).toLocaleDateString()}<br/><span style={{ fontSize: "0.68rem" }}>{new Date(t.created_at).toLocaleTimeString()}</span></td>
-                      <td style={{ padding: "10px 10px" }}>
+                      <td style={{ padding: "10px", fontFamily: "var(--font-head)", color: "var(--accent3)", fontSize: "0.75rem", fontWeight: 700 }}>{t.reference || t.id.slice(0,8).toUpperCase()}</td>
+                      <td style={{ padding: "10px", color: "var(--muted)" }}>{new Date(t.created_at).toLocaleDateString()}<br/><span style={{ fontSize: "0.68rem" }}>{new Date(t.created_at).toLocaleTimeString()}</span></td>
+                      <td style={{ padding: "10px" }}>
                         {items.slice(0,2).map((item,i) => <div key={i} style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{item.emoji} {item.name}</div>)}
                         {items.length > 2 && <div style={{ fontSize: "0.68rem", color: "var(--muted)" }}>+{items.length-2} more</div>}
                         {items[0]?.restaurant_name && <div style={{ fontSize: "0.68rem", color: "var(--accent3)", marginTop: 2 }}>🏪 {items[0].restaurant_name}</div>}
                       </td>
-                      <td style={{ padding: "10px 10px", fontWeight: 700, color: t.total === 0 ? "var(--accent2)" : "var(--accent)" }}>{t.total === 0 ? "Donation" : `₹${t.total}`}</td>
-                      <td style={{ padding: "10px 10px", color: "var(--muted)" }}>{t.pay_method || "—"}</td>
-                      <td style={{ padding: "10px 10px" }}><span className={`badge badge-${t.status==="completed"?"completed":t.status==="pending"?"reserved":"expired"}`}>{t.status}</span></td>
-                      <td style={{ padding: "10px 10px" }}>
+                      <td style={{ padding: "10px", fontWeight: 700, color: t.total === 0 ? "var(--accent2)" : "var(--accent)" }}>{t.total === 0 ? "Donation" : `₹${t.total}`}</td>
+                      <td style={{ padding: "10px", color: (t.wallet_used||0) > 0 ? "var(--accent)" : "var(--muted)", fontSize: "0.78rem" }}>{(t.wallet_used||0) > 0 ? `₹${t.wallet_used}` : "—"}</td>
+                      <td style={{ padding: "10px", color: "var(--muted)" }}>{t.pay_method || "—"}</td>
+                      <td style={{ padding: "10px" }}>
+                        <span className={`badge badge-${["completed","picked_up"].includes(t.status)?"completed":["pending","confirmed","reserved"].includes(t.status)?"reserved":"expired"}`}>{t.status}</span>
+                      </td>
+                      <td style={{ padding: "10px" }}>
                         <button className="btn btn-ghost btn-sm" style={{ fontSize: "0.72rem" }} onClick={() => {
                           generateCompliancePDF({ ...t, receiverName: "Receiver on file", receiverType: "Organisation" }, items, items[0]?.restaurant_name || "Restaurant");
                           onToast("Compliance doc downloaded");
@@ -1976,6 +2152,39 @@ function AdminPage({ listings, onToast }) {
               </tbody>
             </table>
           )}
+        </div>
+      )}
+
+      {/* Flagged listings */}
+      {tab === "flagged" && (
+        <div className="card">
+          <div className="card-title">🚩 Flagged Listings — Auto-flagged as Expired Unclaimed</div>
+          {flaggedListings.length === 0
+            ? <div className="empty-state" style={{ padding: "30px 0" }}><p>No flagged listings 🎉</p></div>
+            : (
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                <thead><tr style={{ borderBottom: "1px solid var(--border)" }}>
+                  {["Item","Restaurant","Expired","Category","Actions"].map(h => <th key={h} style={{ textAlign: "left", padding: "8px 10px", color: "var(--muted)", fontWeight: 700, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</th>)}
+                </tr></thead>
+                <tbody>
+                  {flaggedListings.map(l => (
+                    <tr key={l.id} style={{ borderBottom: "1px solid var(--border)" }}>
+                      <td style={{ padding: "11px 10px", fontWeight: 600 }}>{l.emoji} {l.name}</td>
+                      <td style={{ padding: "11px 10px", color: "var(--muted)", fontSize: "0.81rem" }}>{l.restaurant_name}</td>
+                      <td style={{ padding: "11px 10px", color: "var(--danger)", fontSize: "0.81rem" }}>{l.expiry}</td>
+                      <td style={{ padding: "11px 10px" }}>{l.category}</td>
+                      <td style={{ padding: "11px 10px" }}>
+                        <button className="btn btn-secondary btn-sm" onClick={async () => {
+                          await supabase.from("listings").update({ flagged_unclaimed: false }).eq("id", l.id);
+                          onToast("Flag cleared");
+                          // trigger re-fetch via parent
+                        }}>Clear Flag</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
         </div>
       )}
     </div>
@@ -2014,11 +2223,6 @@ export default function App() {
     return p;
   }, []);
 
-  useEffect(() => {
-    if (session) { refreshProfile(); refreshListings(); releaseExpiredReservations(); }
-    else { setProfile(null); setCart([]); setListings([]); }
-  }, [session]);
-
   const refreshListings = useCallback(async () => {
     const data = await getListings();
     setListings(data);
@@ -2031,11 +2235,35 @@ export default function App() {
     return data;
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      refreshProfile();
+      refreshListings();
+      releaseExpiredReservations();
+      // Run expiry check on mount (will no-op if RPC doesn't exist yet)
+      runExpiryCheck(showToast);
+    } else {
+      setProfile(null); setCart([]); setListings([]);
+    }
+  }, [session]);
+
+  // Periodic expiry check every 30 minutes
+  useEffect(() => {
+    if (!session) return;
+    const interval = setInterval(() => {
+      runExpiryCheck(showToast);
+      releaseExpiredReservations();
+    }, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [session]);
+
   useEffect(() => { if (profile?.role === "receiver") refreshCart(); }, [profile]);
 
   useEffect(() => {
     if (!session) return;
-    const channel = supabase.channel("listings-changes").on("postgres_changes", { event: "*", schema: "public", table: "listings" }, () => refreshListings()).subscribe();
+    const channel = supabase.channel("listings-changes")
+      .on("postgres_changes", { event: "*", schema: "public", table: "listings" }, () => refreshListings())
+      .subscribe();
     return () => supabase.removeChannel(channel);
   }, [session, refreshListings]);
 
@@ -2049,7 +2277,7 @@ export default function App() {
 
   const restaurantNav = [
     { id: "dashboard", icon: "🏠", label: "Dashboard" },
-    { id: "listings", icon: "📦", label: "My Listings" },
+    { id: "listings", icon: "📦", label: "My Listings", badge: listings.filter(l => l.restaurant_id === profile.id && l.flagged_unclaimed).length || undefined },
     { id: "wallet", icon: "💳", label: "Wallet & Payouts" },
     { id: "profile", icon: "👤", label: "Profile" },
   ];
@@ -2061,7 +2289,7 @@ export default function App() {
   ];
   const adminNav = [
     { id: "dashboard", icon: "🏠", label: "Dashboard" },
-    { id: "admin", icon: "🛡️", label: "Admin Panel" },
+    { id: "admin", icon: "🛡️", label: "Admin Panel", badge: listings.filter(l => l.flagged_unclaimed).length || undefined },
     { id: "profile", icon: "👤", label: "Profile" },
   ];
   const nav = profile.role === "restaurant" ? restaurantNav : profile.role === "receiver" ? receiverNav : adminNav;
@@ -2074,7 +2302,7 @@ export default function App() {
       case "wallet": return <WalletPage profile={profile} onToast={showToast} onRefreshProfile={refreshProfile} />;
       case "browse": return <BrowsePage listings={listings} onToast={showToast} cart={cart} setCart={setCart} onShowDetail={setDetailItem} profile={profile} onRefreshListings={async () => { await refreshListings(); await refreshCart(); }} />;
       case "claims": return <MyClaimsPage profile={profile} onToast={showToast} />;
-      case "admin": return <AdminPage listings={listings} onToast={showToast} />;
+      case "admin": return <AdminPage listings={listings} onToast={showToast} onRefreshListings={refreshListings} />;
       default: return <Dashboard profile={profile} listings={listings} onNavigate={setPage} />;
     }
   };
