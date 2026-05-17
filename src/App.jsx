@@ -1241,26 +1241,12 @@ function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, 
               <span className="ct-label">Subtotal</span>
               <span className="ct-val">{total === 0 ? "Free" : `₹${total}`}</span>
             </div>
-<button className="btn btn-primary" style={{ width: "100%", padding: "12px" }} onClick={onCheckout}>
-  Checkout →
-</button>
+            <button className="btn btn-primary" style={{ width: "100%", padding: "12px" }} onClick={onCheckout}>
+              Checkout →
+            </button>
           </div>
         )}
       </div>
-      {showCheckout && (
-        <CheckoutModal
-          cart={cart}
-          profile={profile}
-          onClose={() => setShowCheckout(false)}
-          onToast={onToast}
-onSuccess={async (ref) => {
-  setShowCheckout(false);
-  await onRefreshListings();
-  await onRefreshCart();
-  onToast(`Order confirmed! Ref: ${ref} 🎉`);
-}}
-        />
-      )}
     </>
   );
 }
