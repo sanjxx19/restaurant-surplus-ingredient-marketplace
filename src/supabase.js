@@ -115,6 +115,7 @@ export async function removeFromCart(cartItemId, listingId) {
 
 /** Confirm order: creates order + order_items, clears cart */
 export async function confirmOrder(cart, payMethod) {
+console.log("confirmOrder called with cart:", cart);   // ← add this
   const {
     data: { user },
   } = await supabase.auth.getUser();

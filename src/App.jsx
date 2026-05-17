@@ -713,11 +713,18 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
     return [pickupWindow, "Contact restaurant for alternative"];
   };
 
-  const handleConfirm = async () => {
-    setLoading(true);
-    const ref = genRef();
-    const { error, orderId } = await confirmOrder(cart, payMethod === "wallet" ? "wallet" : payMethod);
-    if (error) { onToast("Order failed — please try again", "err"); setLoading(false); return; }
+const handleConfirm = async () => {
+  setLoading(true);
+  const ref = genRef();
+  console.log("Confirming order:", { cart, payMethod });
+  const { error, orderId } = await confirmOrder(cart, payMethod === "wallet" ? "wallet" : payMethod);
+  console.log("confirmOrder result:", { error, orderId });
+  if (error) {
+    console.error("Order error:", error);
+    onToast("Order failed: " + (error.message || JSON.stringify(error)), "err");
+    setLoading(false);
+    return;
+  }
 
     // Deduct wallet balance if used
     if (walletUsed > 0) {
@@ -1183,8 +1190,7 @@ function ProductDetailModal({ listing: l, onClose, cart, onRefreshListings, onTo
 // ─────────────────────────────────────────────────────────────
 // CART DRAWER
 // ─────────────────────────────────────────────────────────────
-function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, onToast }) {
-  const [showCheckout, setShowCheckout] = useState(false);
+function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, onToast, onCheckout }) {
   const total = cart.reduce((s, i) => s + (i.free ? 0 : (i.price || 0)), 0);
   const freeCount = cart.filter(i => i.free).length;
 
@@ -1235,9 +1241,9 @@ function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, 
               <span className="ct-label">Subtotal</span>
               <span className="ct-val">{total === 0 ? "Free" : `₹${total}`}</span>
             </div>
-            <button className="btn btn-primary" style={{ width: "100%", padding: "12px" }} onClick={() => { onClose(); setShowCheckout(true); }}>
-              Checkout →
-            </button>
+<button className="btn btn-primary" style={{ width: "100%", padding: "12px" }} onClick={onCheckout}>
+  Checkout →
+</button>
           </div>
         )}
       </div>
@@ -1247,11 +1253,12 @@ function CartDrawer({ cart, profile, onRefreshCart, onRefreshListings, onClose, 
           profile={profile}
           onClose={() => setShowCheckout(false)}
           onToast={onToast}
-          onSuccess={async (ref) => {
-            setShowCheckout(false);
-            await onRefreshListings();
-            onToast(`Order confirmed! Ref: ${ref} 🎉`);
-          }}
+onSuccess={async (ref) => {
+  setShowCheckout(false);
+  await onRefreshListings();
+  await onRefreshCart();
+  onToast(`Order confirmed! Ref: ${ref} 🎉`);
+}}
         />
       )}
     </>
@@ -2204,6 +2211,7 @@ export default function App() {
   const [toastType, setToastType] = useState("success");
   const [cartOpen, setCartOpen] = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   const showToast = useCallback((msg, type = "success") => {
     setToast(null);
@@ -2341,16 +2349,31 @@ export default function App() {
         </div>
       </div>
 
-      {cartOpen && (
-        <CartDrawer
-          cart={cart}
-          profile={profile}
-          onRefreshCart={refreshCart}
-          onRefreshListings={async () => { await refreshListings(); await refreshCart(); }}
-          onClose={() => setCartOpen(false)}
-          onToast={showToast}
-        />
-      )}
+{cartOpen && (
+  <CartDrawer
+    cart={cart}
+    profile={profile}
+    onRefreshCart={refreshCart}
+    onRefreshListings={async () => { await refreshListings(); await refreshCart(); }}
+    onClose={() => setCartOpen(false)}
+    onToast={showToast}
+    onCheckout={() => { setCartOpen(false); setCheckoutOpen(true); }}
+  />
+)}
+{checkoutOpen && (
+  <CheckoutModal
+    cart={cart}
+    profile={profile}
+    onClose={() => setCheckoutOpen(false)}
+    onToast={showToast}
+    onSuccess={async (ref) => {
+      setCheckoutOpen(false);
+      await refreshListings();
+      await refreshCart();
+      showToast(`Order confirmed! Ref: ${ref} 🎉`);
+    }}
+  />
+)}
       {detailItem && (
         <ProductDetailModal
           listing={detailItem}
