@@ -80,20 +80,21 @@ export async function getMyCart() {
 
 /** Add a listing to the current user's cart and mark it reserved */
 export async function addToCart(listingId) {
-  // 1. Mark listing as reserved
+  // Get current user first
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: new Error("Not logged in") };
+
   const { error: le } = await supabase
     .from("listings")
     .update({ status: "reserved" })
     .eq("id", listingId)
-    .eq("status", "active"); // only if still active
+    .eq("status", "active");
   if (le) return { error: le };
 
-  // 2. Insert cart item
   const { error: ce } = await supabase
     .from("cart_items")
-    .insert({ listing_id: listingId });
+    .insert({ listing_id: listingId, user_id: user.id }); // ✅ added user_id
   if (ce) {
-    // rollback listing status
     await supabase
       .from("listings")
       .update({ status: "active" })
