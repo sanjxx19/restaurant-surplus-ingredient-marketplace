@@ -1,148 +1,101 @@
+// src/components/CheckoutButton.jsx
 import { useState } from "react";
-
 import { useRazorpay } from "../hooks/useRazorpay";
-import { createRazorpayOrder } from "../services/paymentService";
 import { supabase } from "../supabase";
 
-export default function CheckoutButton({ cartItems, total }) {
+export default function CheckoutButton({ cartItems, total, onSuccess }) {
   const { openPayment } = useRazorpay();
-
   const [loading, setLoading] = useState(false);
 
   async function handleCheckout() {
-    console.log("========== CHECKOUT START ==========");
-
+    if (!cartItems?.length) return;
     setLoading(true);
 
     try {
-      // -----------------------------
-      // AUTH
-      // -----------------------------
-      console.log("Fetching authenticated user...");
-
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      console.log("Auth response:", {
-        user,
-        authError,
-      });
-
-      if (authError) {
-        throw new Error(authError.message);
-      }
-
-      if (!user) {
-        alert("Not logged in");
+      // 1. Get logged-in user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        alert("Please log in first.");
         return;
       }
 
-      // -----------------------------
-      // CREATE RAZORPAY ORDER
-      // -----------------------------
-      console.log("Creating Razorpay order...");
-      console.log("Order total:", total);
+      // 2. Create Razorpay order via Edge Function
+      const { data: rzpOrder, error: orderErr } = await supabase.functions.invoke(
+        "create-razorpay-order",
+        { body: { amount: total, receipt: `rcpt_${Date.now()}` } }
+      );
 
-      const receiptId = `order_${Date.now()}`;
-
-      const rzpOrder = await createRazorpayOrder(total, receiptId);
-
-      console.log("Razorpay order created:", rzpOrder);
-
-      if (!rzpOrder?.id) {
-        throw new Error("Invalid Razorpay order response");
+      if (orderErr || !rzpOrder?.id) {
+        console.error("Razorpay order creation failed:", orderErr, rzpOrder);
+        alert("Could not initiate payment. Please try again.");
+        return;
       }
 
-      // -----------------------------
-      // OPEN PAYMENT WINDOW
-      // -----------------------------
-      console.log("Opening Razorpay checkout...");
-
+      // 3. Open Razorpay checkout
       openPayment({
         amount: total,
         orderId: rzpOrder.id,
-
         prefill: {
           name: user.user_metadata?.name || "",
           email: user.email || "",
         },
 
         onSuccess: async (response) => {
-          console.log("========== PAYMENT SUCCESS ==========");
-          console.log("Razorpay response:", response);
+          // response = { razorpay_payment_id, razorpay_order_id, razorpay_signature }
+          console.log("Payment done, verifying...", response);
 
-          try {
-            console.log("Verifying payment with Supabase function...");
+          // cartItems from getMyCart() are FLATTENED — reshape for the Edge Function
+          const reshapedCart = cartItems.map((item) => ({
+            listing_id: item.id,           // after flattening, listing id is item.id
+            listings: {
+              price: item.price || 0,
+              qty: item.qty,
+              unit: item.unit,
+            },
+          }));
 
-            const { data, error } = await supabase.functions.invoke(
-              "verify-razorpay-payment",
-              {
-                body: {
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-
-                  userId: user.id,
-                  cartItems,
-                  total,
-                },
-              }
-            );
-
-            console.log("Verification response:", {
-              data,
-              error,
-            });
-
-            if (error) {
-              console.error("Verification function error:", error);
-              alert("Payment verification failed.");
-              return;
+          const { data: verifyData, error: verifyErr } = await supabase.functions.invoke(
+            "verify-razorpay-payment",
+            {
+              body: {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                userId: user.id,
+                cartItems: reshapedCart,
+                total,
+              },
             }
+          );
 
-            if (!data?.success) {
-              console.error("Verification unsuccessful:", data);
-              alert("Payment verification failed.");
-              return;
-            }
-
-            console.log("Payment verified successfully!");
-            alert("Payment successful! 🎉");
-
-            // redirect / clear cart / refresh here
-          } catch (verifyErr) {
-            console.error("Verification exception:", verifyErr);
-            alert("Verification failed.");
+          if (verifyErr || !verifyData?.success) {
+            console.error("Verification failed:", verifyErr, verifyData);
+            alert("Payment verification failed. Contact support with your payment ID: " + response.razorpay_payment_id);
+            return;
           }
+
+          alert("Payment successful! 🎉 Order confirmed.");
+          onSuccess?.(); // let parent refresh cart / redirect
         },
 
         onFailure: (err) => {
-          console.error("========== PAYMENT FAILED ==========");
-          console.error("Payment failure:", err);
-
-          alert("Payment failed or cancelled.");
+          console.error("Payment failed/cancelled:", err);
+          if (err !== "dismissed") {
+            alert("Payment failed. Please try again.");
+          }
         },
       });
 
-      console.log("Razorpay checkout opened successfully");
     } catch (err) {
-      console.error("========== CHECKOUT ERROR ==========");
-      console.error(err);
-
+      console.error("Checkout error:", err);
       alert(err.message || "Something went wrong.");
     } finally {
-      console.log("========== CHECKOUT END ==========");
       setLoading(false);
     }
   }
 
   return (
-    <button
-      onClick={handleCheckout}
-      disabled={loading || !cartItems?.length}
-    >
+    <button onClick={handleCheckout} disabled={loading || !cartItems?.length}>
       {loading ? "Processing..." : `Pay ₹${total}`}
     </button>
   );

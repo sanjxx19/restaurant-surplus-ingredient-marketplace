@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 
 const RAZORPAY_SCRIPT = "https://checkout.razorpay.com/v1/checkout.js";
-
+const openPayment = async ({ amount, orderId, prefill, onSuccess, onFailure }) => {
+  console.log("Razorpay Key:", import.meta.env.VITE_RAZORPAY_KEY_ID); 
 function loadScript(src) {
   return new Promise((resolve) => {
     if (document.querySelector(`script[src="${src}"]`)) {
