@@ -715,52 +715,118 @@ function CheckoutModal({ cart, profile, onClose, onSuccess, onToast }) {
 
 const handleConfirm = async () => {
   setLoading(true);
-  const ref = genRef();
-  console.log("Confirming order:", { cart, payMethod });
-  const { error, orderId } = await confirmOrder(cart, payMethod === "wallet" ? "wallet" : payMethod);
-  console.log("confirmOrder result:", { error, orderId });
-  if (error) {
-    console.error("Order error:", error);
-    onToast("Order failed: " + (error.message || JSON.stringify(error)), "err");
+
+  if (allFree || isNonprofitVerified || remainingDue === 0) {
+    const { error, orderId } = await confirmOrder(cart, walletUsed > 0 ? "wallet" : "free");
+    if (error) {
+      onToast("Order failed: " + (error.message || JSON.stringify(error)), "err");
+      setLoading(false);
+      return;
+    }
+    if (walletUsed > 0) {
+      await supabase.from("profiles").update({ wallet_balance: walletBalance - walletUsed }).eq("id", profile.id);
+    }
+    const ref = genRef();
+    if (orderId) {
+      await supabase.from("orders").update({ reference: ref, pickup_slots: selectedSlots, wallet_used: walletUsed }).eq("id", orderId);
+    }
+    setOrderRef(ref);
+    setStep("done");
     setLoading(false);
+    setTimeout(() => onSuccess(ref), 3000);
     return;
   }
 
-    // Deduct wallet balance if used
-    if (walletUsed > 0) {
-      await supabase.from("profiles")
-        .update({ wallet_balance: walletBalance - walletUsed })
-        .eq("id", profile.id);
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const { data: rzpOrder, error: orderErr } = await supabase.functions.invoke(
+      "create-razorpay-order",
+      { body: { amount: remainingDue, receipt: `rcpt_${Date.now()}` } }
+    );
+    if (orderErr || !rzpOrder?.id) {
+      onToast("Could not initiate payment. Try again.", "err");
+      setLoading(false);
+      return;
     }
 
-    // Persist reference and pickup slots (requires schema migration)
-    if (orderId) {
-      await supabase.from("orders")
-        .update({ reference: ref, pickup_slots: selectedSlots, wallet_used: walletUsed })
-        .eq("id", orderId);
-    }
-
-    setOrderRef(ref);
-
-    // Notify both parties
-    await sendNotification("order_confirmed", {
-      ref,
-      receiverEmail: profile.email,
-      restaurantNames: [...new Set(cart.map(i => i.restaurant_name))],
-      items: cart.map(i => i.name),
+    const loaded = await new Promise((resolve) => {
+      if (window.Razorpay) return resolve(true);
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
     });
-
-    // Auto-generate donation receipt for restaurant if free items
-    if (allFree || isNonprofitVerified) {
-      const fakeOrder = { id: ref, reference: ref, created_at: Date.now(), receiverName: profile.biz || profile.name, receiverType: profile.acct_type || "Organisation" };
-      // Queue download for restaurant — triggered on their pickup confirmation
+    if (!loaded) {
+      onToast("Razorpay failed to load. Check your connection.", "err");
+      setLoading(false);
+      return;
     }
 
-    setStep("done");
-    setLoading(false);
-    setTimeout(() => { onSuccess(ref); }, 3000);
-  };
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: Math.round(remainingDue * 100),
+      currency: "INR",
+      name: "SurplusLink",
+      description: "Surplus Ingredient Purchase",
+      order_id: rzpOrder.id,
+      prefill: { name: profile.name || "", email: profile.email || "" },
+      theme: { color: "#00e5a0" },
+      handler: async (response) => {
+        const reshapedCart = cart.map((item) => ({
+          listing_id: item.id,
+          listings: { price: item.price || 0, qty: item.qty, unit: item.unit },
+        }));
+        const { data: verifyData, error: verifyErr } = await supabase.functions.invoke(
+          "verify-razorpay-payment",
+          {
+            body: {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              userId: user.id,
+              cartItems: reshapedCart,
+              total: remainingDue,
+            },
+          }
+        );
+        if (verifyErr || !verifyData?.success) {
+          onToast("Payment verification failed. Contact support.", "err");
+          setLoading(false);
+          return;
+        }
+        if (walletUsed > 0) {
+          await supabase.from("profiles").update({ wallet_balance: walletBalance - walletUsed }).eq("id", profile.id);
+        }
+        if (verifyData.orderId) {
+          await supabase.from("orders").update({ pickup_slots: selectedSlots, wallet_used: walletUsed }).eq("id", verifyData.orderId);
+        }
+        setOrderRef(response.razorpay_payment_id.slice(-8).toUpperCase());
+        setStep("done");
+        setLoading(false);
+        setTimeout(() => onSuccess(response.razorpay_payment_id), 3000);
+      },
+      modal: {
+        ondismiss: () => {
+          onToast("Payment cancelled.", "warn");
+          setLoading(false);
+        },
+      },
+    };
 
+    const rzp = new window.Razorpay(options);
+    rzp.on("payment.failed", (response) => {
+      onToast("Payment failed: " + (response.error?.description || "Unknown error"), "err");
+      setLoading(false);
+    });
+    rzp.open();
+
+  } catch (err) {
+    onToast(err.message || "Something went wrong", "err");
+    setLoading(false);
+  }
+};
   if (step === "done") return (
     <div className="modal-overlay">
       <div className="modal" style={{ textAlign: "center", paddingTop: 50 }}>
