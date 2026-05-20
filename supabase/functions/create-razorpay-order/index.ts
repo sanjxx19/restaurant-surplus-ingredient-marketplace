@@ -3,14 +3,14 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const RAZORPAY_KEY_ID = Deno.env.get("RAZORPAY_KEY_ID")!;
 const RAZORPAY_KEY_SECRET = Deno.env.get("RAZORPAY_KEY_SECRET")!;
 
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "authorization, content-type",
-      },
-    });
+    return new Response("ok", { headers: CORS });
   }
 
   try {
@@ -25,7 +25,7 @@ serve(async (req) => {
         Authorization: `Basic ${credentials}`,
       },
       body: JSON.stringify({
-        amount: Math.round(amount * 100), // Razorpay expects paise
+        amount: Math.round(amount * 100),
         currency,
         receipt,
       }),
@@ -34,15 +34,12 @@ serve(async (req) => {
     const order = await response.json();
 
     return new Response(JSON.stringify(order), {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+      headers: { "Content-Type": "application/json", ...CORS },
     });
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
-      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      headers: { "Content-Type": "application/json", ...CORS },
     });
   }
 });
