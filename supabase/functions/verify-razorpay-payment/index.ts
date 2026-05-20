@@ -1,4 +1,3 @@
-// supabase/functions/verify-razorpay-payment/index.ts
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
@@ -9,7 +8,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 serve(async (req) => {
@@ -27,11 +26,7 @@ serve(async (req) => {
       total,
     } = await req.json();
 
-    // ── 1. Verify HMAC signature ──────────────────────────────
-    if (!RAZORPAY_KEY_SECRET) {
-      throw new Error("RAZORPAY_KEY_SECRET not configured in Edge Function secrets");
-    }
-
+    // 1. Verify HMAC signature
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
     const key = await crypto.subtle.importKey(
       "raw",
@@ -50,14 +45,13 @@ serve(async (req) => {
       .join("");
 
     if (expectedSignature !== razorpay_signature) {
-      console.error("Signature mismatch", { expectedSignature, razorpay_signature });
       return new Response(
         JSON.stringify({ success: false, error: "Invalid payment signature" }),
         { status: 400, headers: { "Content-Type": "application/json", ...CORS } }
       );
     }
 
-    // ── 2. Save order to DB (service role bypasses RLS) ───────
+    // 2. Save order
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     const { data: order, error: orderError } = await supabase
@@ -74,7 +68,7 @@ serve(async (req) => {
 
     if (orderError) throw orderError;
 
-    // ── 3. Insert order items ─────────────────────────────────
+    // 3. Insert order items
     const orderItems = cartItems.map((item: any) => ({
       order_id: order.id,
       listing_id: item.listing_id,
@@ -82,18 +76,16 @@ serve(async (req) => {
       qty: item.listings.qty,
       unit: item.listings.unit,
     }));
-
     const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
     if (itemsError) throw itemsError;
 
-    // ── 4. Mark listings as expired (sold) ───────────────────
-    const listingIds = cartItems.map((i: any) => i.listing_id);
+    // 4. Mark listings as expired (sold)
     await supabase
       .from("listings")
       .update({ status: "expired" })
-      .in("id", listingIds);
+      .in("id", cartItems.map((i: any) => i.listing_id));
 
-    // ── 5. Clear buyer's cart ─────────────────────────────────
+    // 5. Clear cart
     await supabase.from("cart_items").delete().eq("user_id", userId);
 
     return new Response(
